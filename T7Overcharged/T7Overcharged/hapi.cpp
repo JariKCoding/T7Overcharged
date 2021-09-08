@@ -6,6 +6,7 @@
 #include "initialization.h"
 #include "lstate.h"
 
+// TODO: Can we write this shorter without the function functions all the time??
 
 int hksi_hksL_loadbuffer(lua_State* s, HksCompilerSettings* options, char const* buff, size_t sz, char const* name)
 {

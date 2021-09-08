@@ -90,7 +90,7 @@ void lua_setfield(lua_State* s, int index, const char* k)
 
 void lua_setglobal(lua_State* s, const char* k)
 {
-	lua_setfield(s, -10002, k);
+	lua_setfield(s, LUA_GLOBALSINDEX, k);
 }
 
 void lua_pop(lua_State* s, int n)
@@ -204,5 +204,5 @@ void lua_getfield(lua_State* s, int index, const char* k)
 
 void lua_getglobal(lua_State* s, const char* k)
 {
-    lua_getfield(s, -10002, k);
+    lua_getfield(s, LUA_GLOBALSINDEX, k);
 }

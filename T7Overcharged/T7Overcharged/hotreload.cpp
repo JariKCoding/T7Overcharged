@@ -15,9 +15,6 @@
 #include <dirent.h>
 #include <map>
 
-#include "hapi.h"
-
-
 namespace hks
 {
 	void* s_openedMenuData = (void* )0x19C78DB0;
