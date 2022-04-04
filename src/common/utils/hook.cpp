@@ -122,7 +122,7 @@ namespace utils::hook
 	void detour::create(void* place, void* target)
 	{
 		this->clear();
-		this->place_ = place;
+		this->place_ = reinterpret_cast<void*>((uintptr_t)GetModuleHandle(NULL) + reinterpret_cast<size_t>(place));
 
 		if (MH_CreateHook(this->place_, target, &this->original_) != MH_OK)
 		{

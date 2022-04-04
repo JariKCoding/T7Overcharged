@@ -9,7 +9,6 @@ extern "C"
 {
 	int __declspec(dllexport) init(lua::lua_State* L)
 	{
-		game::initialize();
 		game::minlog.WriteLine("T7Overchared initiating");
 
 		const lua::luaL_Reg T7OverchargedLibrary[] =

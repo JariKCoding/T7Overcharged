@@ -1,37 +1,30 @@
 #include <std_include.hpp>
 #include "game.hpp"
+#include "dvars.hpp"
 #include "havok/hks_api.hpp"
 #include "havok/lua_api.hpp"
 #include "utils/string.hpp"
 #include "utils/io.hpp"
+#include "utils/hook.hpp"
 
 #include <string>
 #include <map>
 
 namespace game
 {
-    extern uintptr_t base;// = (uintptr_t)GetModuleHandle(NULL);
+    uintptr_t base = (uintptr_t)GetModuleHandle(NULL);
+	MinLog minlog = MinLog();
 
-	void initialize()
-	{
-		base = (uintptr_t)GetModuleHandle(NULL);
-		minlog = MinLog();
-	}
-
-    static bool hashRemoved = false;
 	int RemoveUiErrorHash(lua::lua_State*)
 	{
-        if (hashRemoved)
+        if (dvars::ui_error_callstack_ship->flags == 0)
             return 1;
-        hashRemoved = true;
 
-
-        INT64 ptrDvar = *(INT64*)((base + 0x168EFCA0));
-        *(DWORD*)(ptrDvar + 0x18) = 0; // clear flags
-        //utils::hook::set<DWORD>(game::base + 0x168EFCA0 + 0x18, 0);
-
+		dvars::ui_error_callstack_ship->flags = 0;
         game::Dvar_SetFromStringByName("ui_error_callstack_ship", "1", true);
 
+		dvars::ui_error_report_delay->flags = 0;
+		game::Dvar_SetFromStringByName("ui_error_report_delay", "0", true);
 
         return 0;
 	}

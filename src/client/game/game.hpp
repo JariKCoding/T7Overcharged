@@ -4,10 +4,9 @@
 
 namespace game
 {
-	static uintptr_t base;
-	static MinLog minlog;
+	extern uintptr_t base;
+	extern MinLog minlog;
 
-	void initialize();
 	int RemoveUiErrorHash(lua::lua_State* s);
 	int CheckForHotReload(lua::lua_State* s);
 	int InitHotReload(lua::lua_State* s);

@@ -36,7 +36,6 @@ namespace axios
 
 	void initialize(lua::lua_State* s)
 	{
-        game::minlog.WriteLine("Called Axios::Initialize");
         // Add the library to lua
         const lua::luaL_Reg AxiosLibrary[] =
         {
