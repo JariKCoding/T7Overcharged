@@ -1,0 +1,22 @@
+#include <std_include.hpp>
+#include "fastfiles.hpp"
+
+#include "game/game.hpp"
+#include "utils/hook.hpp"
+#include "utils/string.hpp"
+
+namespace fastfiles
+{
+	utils::hook::detour db_try_load_x_file_internal_hook;
+
+	void db_try_load_x_file_internal(const char* zoneName, const int zone_flags, const int is_base_map)
+	{
+		game::minlog.WriteLine(utils::string::va("Loading fastfile %s\n", zoneName));
+		return db_try_load_x_file_internal_hook.invoke<void>(zoneName, zone_flags, is_base_map);
+	}
+
+	void initialize(lua::lua_State*)
+	{
+		//db_try_load_x_file_internal_hook.create(0x1425010, &db_try_load_x_file_internal);
+	}
+}
