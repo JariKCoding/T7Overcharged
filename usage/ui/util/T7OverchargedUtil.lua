@@ -1,5 +1,4 @@
 
-local json = require("ui.util.json")
 
 -- Function that we can use to safely call io and dll functions without crashing the client
 function SafeCall( FunctionRef )
