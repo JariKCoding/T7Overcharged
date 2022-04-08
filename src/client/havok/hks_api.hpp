@@ -14,4 +14,6 @@ namespace hks
 
 
 	WEAK game::symbol<void (const char* error, lua::lua_State* luaVM)> Lua_CoD_LuaStateManager_Error{ (uintptr_t)GetModuleHandle(NULL) + 0x1F12640 };
+
+	int execute_raw_lua(std::string source, const char* chunkName);
 }

@@ -5,19 +5,19 @@
 
 namespace console
 {
-    void Print(std::string msg)
+    void print(std::string msg)
     {
         msg = "^7" + msg + "\n";
         game::Com_Printf(0, game::consoleLabel_e::CON_LABEL_DEFAULT_0, msg.c_str());
     }
 
-    void PrintInfo(std::string msg)
+    void print_info(std::string msg)
     {
         msg = "^4" + msg + "\n";
         game::Com_Printf(0, game::consoleLabel_e::CON_LABEL_DEFAULT_0, msg.c_str());
     }
 
-    void PrintError(std::string msg)
+    void print_error(std::string msg)
     {
         if (game::I_stristr(msg.c_str(), "error"))
             msg = "^1" + msg + "\n";
@@ -27,37 +27,37 @@ namespace console
         game::Com_Printf(0, game::consoleLabel_e::CON_LABEL_DEFAULT_0, msg.c_str());
     }
 
-    void PrintWarning(std::string msg)
+    void print_warning(std::string msg)
     {
         msg = "^3" + msg + "\n";
         game::Com_Printf(0, game::consoleLabel_e::CON_LABEL_DEFAULT_0, msg.c_str());
     }
 
-    int Print(lua::lua_State* s)
+    int print(lua::lua_State* s)
     {
         auto text = lua::lua_tostring(s, 1);
-        Print(text);
+        print(text);
         return 1;
     }
 
-    int PrintInfo(lua::lua_State* s)
+    int print_info(lua::lua_State* s)
     {
         auto text = lua::lua_tostring(s, 1);
-        PrintInfo(text);
+        print_info(text);
         return 1;
     }
 
-    int PrintError(lua::lua_State* s)
+    int print_error(lua::lua_State* s)
     {
         auto text = lua::lua_tostring(s, 1);
-        PrintError(text);
+        print_error(text);
         return 1;
     }
 
-    int PrintWarning(lua::lua_State* s)
+    int print_warning(lua::lua_State* s)
     {
         auto text = lua::lua_tostring(s, 1);
-        PrintWarning(text);
+        print_warning(text);
         return 1;
     }
 
@@ -66,10 +66,10 @@ namespace console
         // Add the library to lua
         const lua::luaL_Reg ConsoleLibrary[] =
         {
-            {"Print", Print},
-            {"PrintInfo", PrintInfo},
-            {"PrintError", PrintError},
-            {"PrintWarning", PrintWarning},
+            {"Print", print},
+            {"PrintInfo", print_info},
+            {"PrintError", print_error},
+            {"PrintWarning", print_warning},
             {nullptr, nullptr},
         };
         hks::hksI_openlib(s, "Console", ConsoleLibrary, 0, 1);

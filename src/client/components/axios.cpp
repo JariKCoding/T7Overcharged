@@ -5,7 +5,7 @@
 
 namespace axios
 {
-    int Get(lua::lua_State* s)
+    int get(lua::lua_State* s)
     {
         auto url = lua::lua_tostring(s, 1);
 
@@ -18,7 +18,7 @@ namespace axios
         return 1;
     }
 
-    int Post(lua::lua_State* s)
+    int post(lua::lua_State* s)
     {
         auto url = lua::lua_tostring(s, 1);
         auto body = lua::lua_tostring(s, 2);
@@ -39,8 +39,8 @@ namespace axios
         // Add the library to lua
         const lua::luaL_Reg AxiosLibrary[] =
         {
-            {"Get", Get},
-            {"Post", Post},
+            {"Get", get},
+            {"Post", post},
             {nullptr, nullptr},
         };
         hks::hksI_openlib(s, "Axios", AxiosLibrary, 0, 1);

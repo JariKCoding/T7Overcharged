@@ -7,10 +7,6 @@ namespace game
 	extern uintptr_t base;
 	extern MinLog minlog;
 
-	int RemoveUiErrorHash(lua::lua_State* s);
-	int CheckForHotReload(lua::lua_State* s);
-	int InitHotReload(lua::lua_State* s);
-
 	template <typename T>
 	class symbol
 	{

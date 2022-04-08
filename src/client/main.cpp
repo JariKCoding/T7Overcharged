@@ -4,6 +4,7 @@
 #include "game/game.hpp"
 #include "components/components.hpp"
 #include "havok/hks_api.hpp"
+#include "components/asset_limits.hpp"
 
 extern "C"
 {
@@ -13,9 +14,6 @@ extern "C"
 
 		const lua::luaL_Reg T7OverchargedLibrary[] =
 		{
-			{"RemoveUiErrorHash", game::RemoveUiErrorHash},
-			{"InitHotReload", game::InitHotReload},
-			{"CheckForHotReload", game::CheckForHotReload},
 			{nullptr, nullptr},
 		};
 		hks::hksI_openlib(L, "T7Overcharged", T7OverchargedLibrary, 0, 1);
