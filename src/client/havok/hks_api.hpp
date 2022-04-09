@@ -15,5 +15,13 @@ namespace hks
 
 	WEAK game::symbol<void (const char* error, lua::lua_State* luaVM)> Lua_CoD_LuaStateManager_Error{ (uintptr_t)GetModuleHandle(NULL) + 0x1F12640 };
 
+
+	static const char** TypeName = ((const char**)((*(INT64*)(((uintptr_t)GetModuleHandle(NULL) + 0x337D4B8)))));
+
+	int hks_obj_type(const lua::HksObject* obj);
+	int hksi_lua_type(lua::lua_State* s, int index);
+	int hks_obj_isstring(const lua::HksObject* x);
+	int hksi_lua_isstring(lua::lua_State* s, int index);
+	int hksi_lua_gettop(lua::lua_State* s);
 	int execute_raw_lua(std::string source, const char* chunkName);
 }

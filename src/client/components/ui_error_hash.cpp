@@ -1,5 +1,5 @@
 #include <std_include.hpp>
-#include "ui_error_hash.hpp"
+#include "loader/component_loader.hpp"
 
 #include "game/dvars.hpp"
 #include "havok/hks_api.hpp"
@@ -21,13 +21,19 @@ namespace ui_error_hash
 		return 0;
 	}
 
-	void initialize(lua::lua_State* s)
+	class component final : public component_interface
 	{
-		const lua::luaL_Reg UIErrorHashLibrary[] =
+	public:
+		void lua_start() override
 		{
-			{"Remove", remove},
-			{nullptr, nullptr},
-		};
-		hks::hksI_openlib(s, "UIErrorHash", UIErrorHashLibrary, 0, 1);
-	}
+			const lua::luaL_Reg UIErrorHashLibrary[] =
+			{
+				{"Remove", remove},
+				{nullptr, nullptr},
+			};
+			hks::hksI_openlib(game::UI_luaVM, "UIErrorHash", UIErrorHashLibrary, 0, 1);
+		}
+	};
 }
+
+REGISTER_COMPONENT(ui_error_hash::component)

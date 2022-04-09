@@ -1,5 +1,5 @@
 #include <std_include.hpp>
-#include "fastfiles.hpp"
+#include "loader/component_loader.hpp"
 
 #include "game/game.hpp"
 #include "utils/hook.hpp"
@@ -14,9 +14,22 @@ namespace fastfiles
 		game::minlog.WriteLine(utils::string::va("Loading fastfile %s\n", zoneName));
 		return db_try_load_x_file_internal_hook.invoke<void>(zoneName, zone_flags, is_base_map);
 	}
-
-	void initialize(lua::lua_State*)
+	
+	class component final : public component_interface
 	{
-		//db_try_load_x_file_internal_hook.create(0x1425010, &db_try_load_x_file_internal);
-	}
+	public:
+		void start_hooks() override
+		{
+			db_try_load_x_file_internal_hook.create(0x1425010, &db_try_load_x_file_internal);
+		}
+
+		void destroy_hooks() override
+		{
+			db_try_load_x_file_internal_hook.clear();
+		}
+	};
 }
+
+#ifdef DEBUG
+REGISTER_COMPONENT(fastfiles::component)
+#endif

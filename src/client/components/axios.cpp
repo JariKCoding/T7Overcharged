@@ -1,5 +1,5 @@
 #include <std_include.hpp>
-#include "axios.hpp"
+#include "loader/component_loader.hpp"
 #include "havok/hks_api.hpp"
 #include "havok/lua_api.hpp"
 
@@ -34,15 +34,20 @@ namespace axios
         return 1;
     }
 
-	void initialize(lua::lua_State* s)
-	{
-        // Add the library to lua
-        const lua::luaL_Reg AxiosLibrary[] =
+    class component final : public component_interface
+    {
+    public:
+        void lua_start() override
         {
-            {"Get", get},
-            {"Post", post},
-            {nullptr, nullptr},
-        };
-        hks::hksI_openlib(s, "Axios", AxiosLibrary, 0, 1);
-	}
+            const lua::luaL_Reg AxiosLibrary[] =
+            {
+                {"Get", get},
+                {"Post", post},
+                {nullptr, nullptr},
+            };
+            hks::hksI_openlib(game::UI_luaVM, "Axios", AxiosLibrary, 0, 1);
+        }
+    };
 }
+
+REGISTER_COMPONENT(axios::component)

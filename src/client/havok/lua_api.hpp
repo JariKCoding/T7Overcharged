@@ -18,6 +18,11 @@ namespace lua
 	WEAK game::symbol<const char* (lua_State* s, int idx, const char* fname, int szhint)> luaL_findtable{ (uintptr_t)GetModuleHandle(NULL) + 0x1D530E0 };
 	WEAK game::symbol<const char* (lua_State* s, const char* str)> lua_pushstring{ (uintptr_t)GetModuleHandle(NULL) + 0xA186B0 };
 
+	//WEAK game::symbol<void* (lua_State* s, int narg, const char* tname)> lua_pushstring{ (uintptr_t)GetModuleHandle(NULL) + 0x1D52F50 };
+	WEAK game::symbol<int (lua_State* s, const char* fmt, ...)> luaL_error{ (uintptr_t)GetModuleHandle(NULL) + 0x1D53050 };
+
+	WEAK game::symbol<int(lua_State* s, int index)> lua_isnumber{ (uintptr_t)GetModuleHandle(NULL) + 0x1429350 };
+
 	void luaL_register(lua_State* s, const char* libname, const luaL_Reg* l);
 	void lua_setglobal(lua_State* s, const char* k);
 	void lua_pop(lua_State* s, int n);

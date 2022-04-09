@@ -1,7 +1,8 @@
 #include <std_include.hpp>
-#include "hotreload.hpp"
+#include "loader/component_loader.hpp"
 #include "havok/hks_api.hpp"
 #include "havok/lua_api.hpp"
+#include "game/dvars.hpp"
 
 #include "utils/io.hpp"
 #include "utils/string.hpp"
@@ -46,16 +47,23 @@ namespace hotreload
 
 	void UI_DebugReload(const char* rootName, lua::lua_State* luaVM)
 	{
-		game::LUIElement* element;
+		/*game::LUIElement* element;
 		game::LUIScopedEvent luaEventStruct;
 		element = game::UI_GetRootElement(rootName, luaVM);
 		if (element)
 		{
 			element->currentAnimationState.flags &= 0xFFFFFFFFFFFFFFFDLL;
 			game::GetLUIScopedEvent(&luaEventStruct, luaVM, rootName, "debug_reload");
-			luaEventStruct._finished = 1;
+			while (!luaEventStruct._finished)
+			{
+
+				luaEventStruct._finished = 1;
+			}
 			game::ExecuteLUIScopedEvent(&luaEventStruct);
-		}
+		}*/
+		auto mapname = game::Dvar_GetString(dvars::sv_mapname);
+		auto eventCode = utils::string::va("LUI.roots.%s:processEvent( { name = 'debug_reload', mapname = '%s' } )", rootName, mapname);
+		hks::execute_raw_lua(eventCode, "DebugReload");
 	}
 
 	int check_for_new_files(lua::lua_State* s)
@@ -126,14 +134,20 @@ namespace hotreload
 		return 1;
 	}
 
-	void initialize(lua::lua_State* s)
+	class component final : public component_interface
 	{
-		const lua::luaL_Reg HotReloadLibrary[] =
+	public:
+		void lua_start() override
 		{
-			{"Start", start_hot_reload},
-			{"CheckForNewFiles", check_for_new_files},
-			{nullptr, nullptr},
-		};
-		hks::hksI_openlib(s, "HotReload", HotReloadLibrary, 0, 1);
-	}
+			const lua::luaL_Reg HotReloadLibrary[] =
+			{
+				{"Start", start_hot_reload},
+				{"CheckForNewFiles", check_for_new_files},
+				{nullptr, nullptr},
+			};
+			hks::hksI_openlib(game::UI_luaVM, "HotReload", HotReloadLibrary, 0, 1);
+		}
+	};
 }
+
+REGISTER_COMPONENT(hotreload::component)

@@ -1,10 +1,8 @@
 #include <std_include.hpp>
-#include "utils/minlog.hpp"
 
 #include "game/game.hpp"
-#include "components/components.hpp"
 #include "havok/hks_api.hpp"
-#include "components/asset_limits.hpp"
+#include "loader/component_loader.hpp"
 
 extern "C"
 {
@@ -18,7 +16,12 @@ extern "C"
 		};
 		hks::hksI_openlib(L, "T7Overcharged", T7OverchargedLibrary, 0, 1);
 
-		components::initialize(L);
+		if (!component_loader::post_start())
+		{
+			game::Com_Error_("", 0, 0x200u, "Error while loading T7Overcharged components");
+			game::minlog.WriteLine("Error while loading T7Overcharged components");
+			return 0;
+		}
 
 		game::minlog.WriteLine("T7Overchared initiated");
 		return 1;

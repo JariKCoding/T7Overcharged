@@ -29,6 +29,9 @@ namespace lua
 	struct lua_Debug;
 	typedef void (*lua_Hook)(lua_State*, lua_Debug*);
 
+	typedef hksInt32(*HksErrorFunctionType)(const hksChar*, const hksInt32, const hksChar*, const hksUint32, const hksChar*, const hksChar*);
+
+
 	enum HksError : __int32
 	{
 		HKS_NO_ERROR = 0x0,

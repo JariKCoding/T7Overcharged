@@ -51,4 +51,12 @@ public:
         MinLog::OutputStream << value << std::endl;
         std::cout << value << std::endl;
     }
+
+    void WriteDebug(const char* value)
+    {
+#ifdef DEBUG
+        MinLog::OutputStream << value << std::endl;
+        std::cout << value << std::endl;
+#endif
+    }
 };
