@@ -6,7 +6,17 @@ namespace game
 {
 	WEAK symbol<char(const char* file, int line, lua::ErrorCode code, const char* fmt, ...)> Com_Error_{ (uintptr_t)GetModuleHandle(NULL) + 0x20F8BD0 };
 	WEAK symbol<bool()> Com_IsRunningUILevel{ (uintptr_t)GetModuleHandle(NULL) + 0x2148DB0 };
+	WEAK symbol<bool(eGameModes mode)> Com_SessionMode_IsGameMode{ (uintptr_t)GetModuleHandle(NULL) + 0x20F7D90 };
+	WEAK symbol<bool(eModes mode)> Com_SessionMode_IsMode{ (uintptr_t)GetModuleHandle(NULL) + 0x20F7DD0 };
+	WEAK symbol<const char* (const char* name)> Com_GameInfo_GetGameTypeRefCaps{ (uintptr_t)GetModuleHandle(NULL) + 0x20F4090 };
+	WEAK symbol<const char* (const char* name)> Com_GameInfo_GetGameTypeRef{ (uintptr_t)GetModuleHandle(NULL) + 0x20F4010 };
+	WEAK symbol<const char* (const char* name)> Com_GameInfo_GetMapRef{ (uintptr_t)GetModuleHandle(NULL) + 0x20F4280 };
 
+	WEAK symbol<const char* (const char* name)> UI_SafeTranslateString{ (uintptr_t)GetModuleHandle(NULL) + 0x228F7B0 };
+
+	WEAK symbol<INT64 (const char* name, int imageTrack, bool errorIfMissing, int waitTime)> Material_RegisterHandle{ (uintptr_t)GetModuleHandle(NULL) + 0x1CD4B90 };
+
+	WEAK symbol<int (INT64 lobbySession, LobbyClientType clientType)> LobbySession_GetClientCount{ (uintptr_t)GetModuleHandle(NULL) + 0x1ED8B30 };
 
 	WEAK symbol<void (const char* dvarName, const char* string, bool createIfMissing)> Dvar_SetFromStringByName{ (uintptr_t)GetModuleHandle(NULL) + 0x22C7F60 };
 	WEAK symbol<bool (const dvar_t* dvar)> Dvar_GetBool{ (uintptr_t)GetModuleHandle(NULL) + 0x22BD930 };
@@ -30,4 +40,5 @@ namespace game
 	WEAK symbol<void(LUIScopedEvent* event, lua::lua_State* luaVM, const char* rootName, const char* eventName)> GetLUIScopedEvent{ (uintptr_t)GetModuleHandle(NULL) + 0x26FF350 };
 	WEAK symbol<void(LUIScopedEvent* event)> ExecuteLUIScopedEvent{ (uintptr_t)GetModuleHandle(NULL) + 0x26FF580 };
 
+	WEAK symbol<int ()> Sys_IsDatabaseReady2{ (uintptr_t)GetModuleHandle(NULL) + 0x2184490 };
 }

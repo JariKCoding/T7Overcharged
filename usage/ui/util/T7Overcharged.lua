@@ -34,6 +34,7 @@ function InitializeT7Overcharged(options)
     end)
 
     UIErrorHash.Remove()
+    DiscordRPC.Enable("960248533850681395")
     if debug then
       HotReload.Start(options.filespath)
     end
