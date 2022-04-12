@@ -50,17 +50,31 @@ void component_loader::initialize_hook_cycle()
 		hks::hksI_openlib(game::UI_luaVM, "HookCycle", HookCycleLibrary, 0, 1);
 
 		// Create a event handler for when the hud is created, at this point it is safe to start hooks
-		std::string hookCycleEvent = "local root = LUI.roots.UIRoot0; "
-			"local oldEvent = root.m_eventHandlers['addmenu']; "
-			"root:registerEventHandler( 'addmenu', function( element, event ) "
-				"oldEvent( element, event ); "
-				"local rootChild = element:getFirstChild(); "
-				"local oldSnapshotEvent = rootChild.m_eventHandlers['first_snapshot']; "
-				"rootChild:registerEventHandler( 'first_snapshot', function( element, event ) "
-					"oldSnapshotEvent( element, event ); "
-					"HookCycle.Create(); "
+		std::string hookCycleEvent = 
+			"LUI.roots.UIRootFull.HUDRefreshTimer = LUI.UITimer.newElementTimer(1000, true, function() "
+				"local root = LUI.roots.UIRoot0; "
+				"local rootChildExists = root:getFirstChild(); "
+				"if rootChildExists and rootChildExists.menuName and rootChildExists.menuName == 'HUD' then "
+					"local oldSnapshotEvent = rootChildExists.m_eventHandlers['first_snapshot']; "
+					"rootChildExists:registerEventHandler( 'first_snapshot', function( element, event ) "
+						"oldSnapshotEvent( element, event ); "
+						"HookCycle.Create(); "
+					"end ); "
+					"return; "
+				"end; "
+				"local oldEvent = root.m_eventHandlers['addmenu']; "
+				"root:registerEventHandler( 'addmenu', function( element, event ) "
+					"oldEvent( element, event ); "
+					"local rootChild = element:getFirstChild(); "
+					"local oldSnapshotEvent = rootChild.m_eventHandlers['first_snapshot']; "
+					"rootChild:registerEventHandler( 'first_snapshot', function( element, event ) "
+						"oldSnapshotEvent( element, event ); "
+						"HookCycle.Create(); "
+					"end ); "
 				"end ); "
-			"end ); ";
+			"end); "
+			"LUI.roots.UIRootFull:addElement(LUI.roots.UIRootFull.HUDRefreshTimer);";
+		
 		hks::execute_raw_lua(hookCycleEvent, "HookCycleEvent");
 	}
 	else

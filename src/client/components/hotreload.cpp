@@ -66,6 +66,8 @@ namespace hotreload
 		hks::execute_raw_lua(eventCode, "DebugReload");
 	}
 
+	bool refreshGameplayRoots = false;
+
 	int check_for_new_files(lua::lua_State* s)
 	{
 		std::vector<std::filesystem::directory_entry> newFiles = search_for_new_files();
@@ -94,7 +96,7 @@ namespace hotreload
 		}
 
 		UI_DebugReload("UIRootFull", game::UI_luaVM);
-		if (!game::Com_IsRunningUILevel())
+		if (refreshGameplayRoots)
 		{
 			UI_DebugReload("UIRoot0", game::UI_luaVM);
 			UI_DebugReload("UIRoot1", game::UI_luaVM);
@@ -146,6 +148,18 @@ namespace hotreload
 				{nullptr, nullptr},
 			};
 			hks::hksI_openlib(game::UI_luaVM, "HotReload", HotReloadLibrary, 0, 1);
+		}
+
+		void start_hooks() override
+		{
+			refreshGameplayRoots = true;
+			UI_DebugReload("UIRoot0", game::UI_luaVM);
+			UI_DebugReload("UIRoot1", game::UI_luaVM);
+		}
+
+		void destroy_hooks() override
+		{
+			refreshGameplayRoots = false;
 		}
 	};
 }

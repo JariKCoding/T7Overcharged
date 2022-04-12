@@ -23,9 +23,6 @@ namespace discord
 			discord_presence.details = game::Com_SessionMode_IsMode(game::eModes::MODE_CAMPAIGN) ? "Campaign" : game::Com_SessionMode_IsMode(game::eModes::MODE_MULTIPLAYER) ? "Multiplayer" : "Zombies";
 			discord_presence.state = "Lobby";
 
-			discord_presence.partySize = 0;
-			discord_presence.partyMax = 0;
-
 			discord_presence.startTimestamp = 0;
 
 			discord_presence.largeImageKey = "t7overcharged";
@@ -95,7 +92,6 @@ namespace discord
 		{
 			const lua::luaL_Reg HotReloadLibrary[] =
 			{
-				
 				{"Enable", enable},
 				{nullptr, nullptr},
 			};

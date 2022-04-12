@@ -23,8 +23,6 @@ extern "C"
 			return 0;
 		}
 
-		*(INT64*)((uintptr_t)GetModuleHandle(NULL) + 0x179C9B68) = game::Material_RegisterHandle("ui_cursor_new", 3, 1, -1);
-
 		game::minlog.WriteLine("T7Overchared initiated");
 		return 1;
 	}
