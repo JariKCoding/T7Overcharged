@@ -17,12 +17,13 @@ namespace discord
 	int roundsPlayed;
 	int playerScore;
 	int enemyScore;
+	bool isIngame = false;
 
 	void update_discord()
 	{
 		Discord_RunCallbacks();
 
-		if (game::Com_IsRunningUILevel())
+		if (!isIngame)
 		{
 			discord_presence.details = game::Com_SessionMode_IsMode(game::eModes::MODE_CAMPAIGN) ? "Campaign" : game::Com_SessionMode_IsMode(game::eModes::MODE_MULTIPLAYER) ? "Multiplayer" : "Zombies";
 			discord_presence.state = "Lobby";
@@ -129,6 +130,7 @@ namespace discord
 
 		void start_hooks() override
 		{
+			isIngame = true;
 			std::string raw_lua = 
 				"LUI.roots.UIRoot0:subscribeToGlobalModel(0, 'GameScore', 'roundsPlayed', function(model) "
 					"local roundsPlayed = Engine.GetModelValue(model); "
@@ -149,6 +151,11 @@ namespace discord
 					"end; "
 				"end); ";
 			hks::execute_raw_lua(raw_lua, "DiscordScoreModels");
+		}
+
+		void destroy_hooks() override
+		{
+			isIngame = false;
 		}
 
 	private:
