@@ -56,7 +56,7 @@ namespace hotreload
 			game::GetLUIScopedEvent(&luaEventStruct, luaVM, rootName, "debug_reload");
 			while (!luaEventStruct._finished)
 			{
-
+				lua::Lua_SetTableString("mapname", game::Dvar_GetString(dvars::sv_mapname), luaEventStruct._vm);
 				luaEventStruct._finished = 1;
 			}
 			game::ExecuteLUIScopedEvent(&luaEventStruct);
@@ -153,8 +153,11 @@ namespace hotreload
 		void start_hooks() override
 		{
 			refreshGameplayRoots = true;
-			UI_DebugReload("UIRoot0", game::UI_luaVM);
-			UI_DebugReload("UIRoot1", game::UI_luaVM);
+			if (hot_reload_running)
+			{
+				UI_DebugReload("UIRoot0", game::UI_luaVM);
+				UI_DebugReload("UIRoot1", game::UI_luaVM);
+			}
 		}
 
 		void destroy_hooks() override

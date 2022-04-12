@@ -6,6 +6,7 @@ require("ui.util.T7OverchargedUtil")
 --    mapname or modname: Enables debug mode and hot reloading when launched via the launcher
 --    filespath: The path to the mod or map files that will be used for hot reloading eg [[.\maps\zm_factory\]]
 --    workshopid: The id of the workshop item so the dll can be found
+--    discordAppId: The application id of the discord app, can be found here https://discord.com/developers/applications/
 function InitializeT7Overcharged(options)
     if T7Overcharged then return false end
 
@@ -34,7 +35,10 @@ function InitializeT7Overcharged(options)
     end)
 
     UIErrorHash.Remove()
-    DiscordRPC.Enable("960248533850681395")
+    if options.discordAppId then
+      DiscordRPC.Enable(options.discordAppId)
+    end
+    
     if debug then
       HotReload.Start(options.filespath)
     end

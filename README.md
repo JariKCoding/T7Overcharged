@@ -11,6 +11,7 @@
 - Extending the asset limits
 - Printing to the in-game console from lua
 - HTTP requests from lua
+- Discord Rich Presence
 - More to come!
 
 ## How to use
@@ -33,7 +34,8 @@ for a mod:
 InitializeT7Overcharged({
 	modname = "t7overcharged",
 	filespath = [[.\mods\t7overcharged\]],
-	workshopid = "45131545"
+	workshopid = "45131545",
+	discordAppId = nil--"{{DISCORD_APP_ID}}" -- Not required, create your application at https://discord.com/developers/applications/
 })
 ```
 for a map:
@@ -41,7 +43,8 @@ for a map:
 InitializeT7Overcharged({
 	mapname = "zm_t7overcharged",
 	filespath = [[.\usermaps\zm_t7overcharged\]],
-	workshopid = "45131545"
+	workshopid = "45131545",
+	discordAppId = nil--"{{DISCORD_APP_ID}}" -- Not required, create your application at https://discord.com/developers/applications/
 })
 ```
 

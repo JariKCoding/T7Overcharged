@@ -23,6 +23,8 @@ namespace lua
 
 	WEAK game::symbol<int(lua_State* s, int index)> lua_isnumber{ (uintptr_t)GetModuleHandle(NULL) + 0x1429350 };
 
+	WEAK game::symbol<__int64 (const char* key, const char* value, lua_State* luaVM)> Lua_SetTableString{ (uintptr_t)GetModuleHandle(NULL) + 0x32534688 };
+
 	void luaL_register(lua_State* s, const char* libname, const luaL_Reg* l);
 	void lua_setglobal(lua_State* s, const char* k);
 	void lua_pop(lua_State* s, int n);

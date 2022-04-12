@@ -14,6 +14,10 @@ namespace discord
 {
 	DiscordRichPresence discord_presence;
 
+	int roundsPlayed;
+	int playerScore;
+	int enemyScore;
+
 	void update_discord()
 	{
 		Discord_RunCallbacks();
@@ -22,6 +26,9 @@ namespace discord
 		{
 			discord_presence.details = game::Com_SessionMode_IsMode(game::eModes::MODE_CAMPAIGN) ? "Campaign" : game::Com_SessionMode_IsMode(game::eModes::MODE_MULTIPLAYER) ? "Multiplayer" : "Zombies";
 			discord_presence.state = "Lobby";
+			roundsPlayed = 0;
+			playerScore = 0;
+			enemyScore = 0;
 
 			discord_presence.startTimestamp = 0;
 
@@ -33,20 +40,21 @@ namespace discord
 
 			if (game::Com_SessionMode_IsMode(game::eModes::MODE_CAMPAIGN))
 			{
+				discord_presence.state = "In-Game";
 				discord_presence.details = map;
 			}
 			else if (game::Com_SessionMode_IsMode(game::eModes::MODE_MULTIPLAYER))
 			{
 				auto gametype = game::UI_SafeTranslateString(game::Com_GameInfo_GetGameTypeRef(dvars::ui_gametype->current.string));
 				discord_presence.details = utils::string::va("%s on %s", gametype, map);
+				discord_presence.state = utils::string::va("%d - %d", playerScore, enemyScore);
 			}
 			else
 			{
-				// TODO: Rounds played
+				discord_presence.state = utils::string::va("Round %d", roundsPlayed);
 				discord_presence.details = map;
 			}
-
-			discord_presence.state = "In-Game";
+			
 
 			if (!discord_presence.startTimestamp)
 			{
@@ -64,6 +72,24 @@ namespace discord
 	}
 
 	int enable(lua::lua_State* s);
+
+	int set_rounds_played(lua::lua_State* s)
+	{
+		roundsPlayed = lua::lua_tonumber(s, 1);
+		return 1;
+	}
+
+	int set_playerscore(lua::lua_State* s)
+	{
+		playerScore = lua::lua_tonumber(s, 1);
+		return 1;
+	}
+
+	int set_enemyscore(lua::lua_State* s)
+	{
+		enemyScore = lua::lua_tonumber(s, 1);
+		return 1;
+	}
 
 	class component final : public component_interface
 	{
@@ -93,9 +119,36 @@ namespace discord
 			const lua::luaL_Reg HotReloadLibrary[] =
 			{
 				{"Enable", enable},
+				{"SetRoundsPlayed", set_rounds_played},
+				{"SetPlayerScore", set_playerscore},
+				{"SetEnemyScore", set_enemyscore},
 				{nullptr, nullptr},
 			};
 			hks::hksI_openlib(game::UI_luaVM, "DiscordRPC", HotReloadLibrary, 0, 1);
+		}
+
+		void start_hooks() override
+		{
+			std::string raw_lua = 
+				"LUI.roots.UIRoot0:subscribeToGlobalModel(0, 'GameScore', 'roundsPlayed', function(model) "
+					"local roundsPlayed = Engine.GetModelValue(model); "
+					"if roundsPlayed then "
+						"DiscordRPC.SetRoundsPlayed(roundsPlayed - 1); "
+					"end; "
+				"end); "
+				"LUI.roots.UIRoot0:subscribeToGlobalModel(0, 'GameScore', 'playerScore', function(model) "
+					"local playerScore = Engine.GetModelValue(model); "
+					"if playerScore and not Engine.IsVisibilityBitSet( 0, Enum.UIVisibilityBit.BIT_IN_KILLCAM ) then "
+						"DiscordRPC.SetPlayerScore(playerScore); "
+					"end; "
+				"end); "
+				"LUI.roots.UIRoot0:subscribeToGlobalModel(0, 'GameScore', 'enemyScore', function(model) "
+					"local enemyScore = Engine.GetModelValue(model); "
+					"if enemyScore and not Engine.IsVisibilityBitSet( 0, Enum.UIVisibilityBit.BIT_IN_KILLCAM ) then "
+						"DiscordRPC.SetEnemyScore(enemyScore); "
+					"end; "
+				"end); ";
+			hks::execute_raw_lua(raw_lua, "DiscordScoreModels");
 		}
 
 	private:
