@@ -31,6 +31,7 @@ namespace game
 	WEAK symbol<bool(int channel, consoleLabel_e label, const char* fmt, ...)> Com_Printf{ (uintptr_t)GetModuleHandle(NULL) + 0x21499C0 };
 	WEAK symbol<bool(int channel, consoleLabel_e label, const char* msg, int error)> Com_PrintMessage{ (uintptr_t)GetModuleHandle(NULL) + 0x2149660 };
 	WEAK symbol<const char* (const char* s0, const char* substr)> I_stristr{ (uintptr_t)GetModuleHandle(NULL) + 0x22EA2B0 };
+	WEAK symbol<__int64(int* a1, __int64 a2, __int64 a3)> PLmemset{ (uintptr_t)GetModuleHandle(NULL) + 0x2C3EA20 };
 
 
 	WEAK symbol<void()> OpenExternalConsole{ (uintptr_t)GetModuleHandle(NULL) + 0x2333F80 }; // Opens the console but not repsonding
@@ -41,4 +42,13 @@ namespace game
 	WEAK symbol<void(LUIScopedEvent* event)> ExecuteLUIScopedEvent{ (uintptr_t)GetModuleHandle(NULL) + 0x26FF580 };
 
 	WEAK symbol<int ()> Sys_IsDatabaseReady2{ (uintptr_t)GetModuleHandle(NULL) + 0x2184490 };
+
+	WEAK symbol<ScrString_t(const char* s)> GScr_AllocString{ (uintptr_t)GetModuleHandle(NULL) + 0x1A83520 };
+
+	WEAK symbol<int(void* ps, void* weapon/*const playerState_t* ps, const Weapon weapon*/)> BG_GetAmmoInClip{(uintptr_t)GetModuleHandle(NULL) + 0x26E7310};
+	WEAK symbol<int(void* ps, void* weapon/*const playerState_t* ps, const Weapon weapon*/)> BG_GetTotalAmmoReserve{ (uintptr_t)GetModuleHandle(NULL) + 0x26E7AB0 };
+	WEAK symbol<bool(void* weapon/*const Weapon weapon*/)> BG_IsLeftHandWeapon{ (uintptr_t)GetModuleHandle(NULL) + 0x26F4A90 };
+
+	WEAK symbol<int(void*/*const DObj*/ obj, ScrString_t name, BoneIndex* index, int modelNum)> DObjGetBoneIndex{ (uintptr_t)GetModuleHandle(NULL) + 0x233DF70 };
+	WEAK symbol<int(void*/*const DObj*/ obj, int* partBits, uint16_t boneIndex, const vec3_t* trans, const vec3_t* angles)> DObjSetLocalTag{ (uintptr_t)GetModuleHandle(NULL) + 0x233EDE0 };
 }

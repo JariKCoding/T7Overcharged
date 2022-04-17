@@ -8,6 +8,8 @@ namespace game
 	typedef vec_t vec4_t[4];
 
 	typedef uint32_t dvarStrHash_t;
+	typedef uint32_t ScrString_t;
+	typedef int16_t BoneIndex;
 	struct dvar_t;
 
 	enum dvarType_t : __int32
