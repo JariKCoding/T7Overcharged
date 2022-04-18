@@ -9,7 +9,7 @@
 - Hot reloading of lua scripts
 - UI Errors now give a stack trace and don't cause a freeze
 - Extending the asset limits
-- Printing to the in-game console from lua
+- External console and printing to the console from lua
 - HTTP requests from lua
 - Discord Rich Presence
 - Bullet depletion
@@ -36,7 +36,8 @@ InitializeT7Overcharged({
 	modname = "t7overcharged",
 	filespath = [[.\mods\t7overcharged\]],
 	workshopid = "45131545",
-	discordAppId = nil--"{{DISCORD_APP_ID}}" -- Not required, create your application at https://discord.com/developers/applications/
+	discordAppId = nil,--"{{DISCORD_APP_ID}}" -- Not required, create your application at https://discord.com/developers/applications/
+	showExternalConsole = true
 })
 ```
 for a map:
@@ -45,7 +46,8 @@ InitializeT7Overcharged({
 	mapname = "zm_t7overcharged",
 	filespath = [[.\usermaps\zm_t7overcharged\]],
 	workshopid = "45131545",
-	discordAppId = nil--"{{DISCORD_APP_ID}}" -- Not required, create your application at https://discord.com/developers/applications/
+	discordAppId = nil,--"{{DISCORD_APP_ID}}" -- Not required, create your application at https://discord.com/developers/applications/
+	showExternalConsole = true
 })
 ```
 

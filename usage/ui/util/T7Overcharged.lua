@@ -7,6 +7,7 @@ require("ui.util.T7OverchargedUtil")
 --    filespath: The path to the mod or map files that will be used for hot reloading eg [[.\maps\zm_factory\]]
 --    workshopid: The id of the workshop item so the dll can be found
 --    discordAppId: The application id of the discord app, can be found here https://discord.com/developers/applications/
+--    showExternalConsole: Whether to show external console when launching the game
 function InitializeT7Overcharged(options)
     if T7Overcharged then return false end
 
@@ -37,6 +38,9 @@ function InitializeT7Overcharged(options)
     UIErrorHash.Remove()
     if options.discordAppId then
       DiscordRPC.Enable(options.discordAppId)
+    end
+    if options.showExternalConsole and debug then
+      Console.ShowExternalConsole()
     end
     
     if debug then

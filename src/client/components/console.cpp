@@ -83,20 +83,26 @@ namespace console
         print_warning(text);
         return 1;
     }
-    
 
     utils::hook::detour Com_EventLoop_hook;
     static bool console_init = false;
-    
-    void Com_EventLoop(bool poll)
+
+    int show_external_console(lua::lua_State* s)
     {
         if (!console_init)
         {
             game::Sys_ShowConsole();
             console_init = true;
         }
-
+        return 1;
+    }
+    
+    void Com_EventLoop(bool poll)
+    {
         Com_EventLoop_hook.invoke<void>(poll);
+
+        if (!console_init)
+            return;
 
         MSG msg{};
 
@@ -121,6 +127,7 @@ namespace console
                 {"PrintInfo", print_info},
                 {"PrintError", print_error},
                 {"PrintWarning", print_warning},
+                {"ShowExternalConsole", show_external_console},
                 {nullptr, nullptr},
             };
             hks::hksI_openlib(game::UI_luaVM, "Console", ConsoleLibrary, 0, 1);
