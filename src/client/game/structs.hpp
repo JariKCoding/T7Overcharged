@@ -10,6 +10,7 @@ namespace game
 	typedef uint32_t dvarStrHash_t;
 	typedef uint32_t ScrString_t;
 	typedef int16_t BoneIndex;
+	typedef unsigned int ScrVarCanonicalName_t;
 	struct dvar_t;
 
 	enum dvarType_t : __int32
@@ -268,6 +269,22 @@ namespace game
 		LOCAL_CLIENT_2 = 0x2,
 		LOCAL_CLIENT_3 = 0x3,
 		LOCAL_CLIENT_COUNT = 0x4,
+	};
+
+	enum class scriptInstance_t : int
+	{
+		SCRIPTINSTANCE_SERVER = 0x0,
+		SCRIPTINSTANCE_CLIENT = 0x1,
+		SCRIPT_INSTANCE_MAX = 0x2,
+	};
+
+	struct BuiltinFunctionDef
+	{
+		ScrVarCanonicalName_t canonwId;
+		unsigned int min_args;
+		unsigned int max_args;
+		void(*actionFunc)(scriptInstance_t inst);
+		int type;
 	};
 
 	struct AssetLink

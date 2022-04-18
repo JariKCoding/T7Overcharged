@@ -35,6 +35,10 @@ namespace game
 
 	/* CSC/GSC */
 	WEAK symbol<ScrString_t(const char* s)> GScr_AllocString{ OFFSET(0x141A83520) };
+	WEAK symbol<int(scriptInstance_t inst, unsigned int index)> Scr_GetInt{ OFFSET(0x1412EB7F0) };
+	WEAK symbol<const char* (scriptInstance_t inst, unsigned int index)> Scr_GetString{ OFFSET(0x1412EBAA0) };
+	// Variables
+	WEAK symbol<BuiltinFunctionDef> isProfileBuildFunctionDef{ OFFSET(0x1432D9D70) };
 
 	/* DB */
 	WEAK symbol<int(XAssetType type)> DB_GetXAssetTypeSize{ OFFSET(0x1413E9DD0) };

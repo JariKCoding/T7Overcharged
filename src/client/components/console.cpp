@@ -3,6 +3,7 @@
 #include "console.hpp"
 #include "havok/hks_api.hpp"
 #include "havok/lua_api.hpp"
+#include "script/builtins.hpp"
 #include "utils/string.hpp"
 #include <utils/io.hpp>
 
