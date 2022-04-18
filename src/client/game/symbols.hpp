@@ -51,4 +51,5 @@ namespace game
 
 	WEAK symbol<int(void*/*const DObj*/ obj, ScrString_t name, BoneIndex* index, int modelNum)> DObjGetBoneIndex{ (uintptr_t)GetModuleHandle(NULL) + 0x233DF70 };
 	WEAK symbol<int(void*/*const DObj*/ obj, int* partBits, uint16_t boneIndex, const vec3_t* trans, const vec3_t* angles)> DObjSetLocalTag{ (uintptr_t)GetModuleHandle(NULL) + 0x233EDE0 };
+	WEAK symbol<LocalClientNum_t (void*/*const DObj*/ obj)> DObjGetLocalClientIndex{ (uintptr_t)GetModuleHandle(NULL) + 0x2337A30 };
 }

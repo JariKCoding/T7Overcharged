@@ -12,6 +12,7 @@
 - Printing to the in-game console from lua
 - HTTP requests from lua
 - Discord Rich Presence
+- Bullet depletion
 - More to come!
 
 ## How to use

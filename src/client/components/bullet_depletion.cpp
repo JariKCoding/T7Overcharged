@@ -7,10 +7,20 @@
 namespace bullet_depletion
 {
 	utils::hook::detour cg_updateviewmodeldynamicbones_hook;
+	utils::hook::detour cg_processclientnote_hook;
+
+	bool bullet_depletion_enabled[2] = { true, true };
+
+	game::ScrString_t disable_bullet_depletion_str = game::GScr_AllocString("disable bullet depletion");
+	game::ScrString_t enable_bullet_depletion_str = game::GScr_AllocString("enable bullet depletion");
 
 	void cg_updateviewmodeldynamicbones_internal(void* cgameGlob, void* ps, void* obj, void* weapon, void* cent)
 	{
 		cg_updateviewmodeldynamicbones_hook.invoke<void>(cgameGlob, ps, obj, weapon, cent);
+
+		game::LocalClientNum_t localClientNum = game::DObjGetLocalClientIndex(obj);
+		if (!bullet_depletion_enabled[localClientNum])
+			return;
 
 		int ammoInClip = game::BG_GetAmmoInClip(ps, weapon);
 		int ammoStock = game::BG_GetTotalAmmoReserve(ps, weapon);
@@ -64,17 +74,35 @@ namespace bullet_depletion
 		}
 	}
 
+	void cg_processclientnote_internal(void* obj, const game::XAnimNotifyInfo* notifyInfo, void* info, const unsigned int notifyFilter, bool shutdown, bool skipNonImportantNotifies)
+	{
+		cg_processclientnote_hook.invoke<void>(obj, notifyInfo, info, notifyFilter, shutdown, skipNonImportantNotifies);
+
+		if (notifyInfo->type == enable_bullet_depletion_str)
+		{
+			game::LocalClientNum_t localClientNum = game::DObjGetLocalClientIndex(obj);
+			bullet_depletion_enabled[localClientNum] = true;
+		}
+		else if (notifyInfo->type == disable_bullet_depletion_str)
+		{
+			game::LocalClientNum_t localClientNum = game::DObjGetLocalClientIndex(obj);
+			bullet_depletion_enabled[localClientNum] = false;
+		}
+	}
+
 	class component final : public component_interface
 	{
 	public:
 		void start_hooks() override
 		{
 			cg_updateviewmodeldynamicbones_hook.create(0x126EE90, &cg_updateviewmodeldynamicbones_internal);
+			cg_processclientnote_hook.create(0x255C70, &cg_processclientnote_internal);
 		}
 
 		void destroy_hooks() override
 		{
 			cg_updateviewmodeldynamicbones_hook.clear();
+			cg_processclientnote_hook.clear();
 		}
 	};
 }

@@ -242,6 +242,18 @@ namespace game
 		LOBBY_CLIENT_TYPE_GUEST = 0x2,
 	};
 
+	enum LocalClientNum_t : __int32
+	{
+		INVALID_LOCAL_CLIENT = -1,
+		LOCAL_CLIENT_0 = 0x0,
+		LOCAL_CLIENT_FIRST = 0x0,
+		LOCAL_CLIENT_KEYBOARD_AND_MOUSE = 0x0,
+		LOCAL_CLIENT_1 = 0x1,
+		LOCAL_CLIENT_2 = 0x2,
+		LOCAL_CLIENT_3 = 0x3,
+		LOCAL_CLIENT_COUNT = 0x4,
+	};
+
 	struct AssetLink
 	{
 		AssetLink* next;
@@ -570,5 +582,13 @@ namespace game
 		LUIElement* nextSibling;
 		LUIElement* firstChild;
 		LUIElement* lastChild;
+	};
+
+	struct XAnimNotifyInfo
+	{
+		ScrString_t type;
+		float time;
+		ScrString_t param1;
+		ScrString_t param2;
 	};
 }
