@@ -84,6 +84,32 @@ namespace console
         return 1;
     }
     
+
+    utils::hook::detour Com_EventLoop_hook;
+    static bool console_init = false;
+    
+    void Com_EventLoop(bool poll)
+    {
+        if (!console_init)
+        {
+            game::Sys_ShowConsole();
+            console_init = true;
+        }
+
+        Com_EventLoop_hook.invoke<void>(poll);
+
+        MSG msg{};
+
+        while (PeekMessageA(&msg, nullptr, 0, 0, 0))
+        {
+            if (GetMessageA(&msg, nullptr, 0, 0))
+            {
+                TranslateMessage(&msg);
+                DispatchMessageA(&msg);
+            }
+        }
+    }
+
     class component final : public component_interface
     {
     public:
@@ -98,6 +124,16 @@ namespace console
                 {nullptr, nullptr},
             };
             hks::hksI_openlib(game::UI_luaVM, "Console", ConsoleLibrary, 0, 1);
+        }
+
+        void start_hooks() override
+        {
+            Com_EventLoop_hook.create(0x20F94B0, Com_EventLoop);
+        }
+
+        void destroy_hooks() override
+        {
+            Com_EventLoop_hook.clear();
         }
     };
 }

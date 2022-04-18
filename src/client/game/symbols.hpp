@@ -34,7 +34,7 @@ namespace game
 	WEAK symbol<__int64(int* a1, __int64 a2, __int64 a3)> PLmemset{ (uintptr_t)GetModuleHandle(NULL) + 0x2C3EA20 };
 
 
-	WEAK symbol<void()> OpenExternalConsole{ (uintptr_t)GetModuleHandle(NULL) + 0x2333F80 }; // Opens the console but not repsonding
+	WEAK symbol<void()> Sys_ShowConsole{ (uintptr_t)GetModuleHandle(NULL) + 0x2333F80 };
 
 
 	WEAK symbol<game::LUIElement* (const char* rootName, lua::lua_State* luaVM)> UI_GetRootElement{ (uintptr_t)GetModuleHandle(NULL) + 0x27056C0 };
