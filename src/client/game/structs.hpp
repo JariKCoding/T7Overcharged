@@ -479,12 +479,29 @@ namespace game
 
 	typedef void (*LUA_EVENT_FUNC)(LuaScopedEventBase*);
 
+	enum dvarFlags_e
+	{
+		DVAR_ARCHIVE = 1 << 0,
+		DVAR_USERINFO = 1 << 1,
+		DVAR_SYSTEMINFO = 1 << 2,
+		DVAR_CODINFO = 1 << 3,
+		DVAR_LATCH = 1 << 4,
+		DVAR_ROM = 1 << 5,
+		DVAR_SAVED = 1 << 6,
+		DVAR_INIT = 1 << 7,
+		DVAR_CHEAT = 1 << 8,
+		//DVAR_UNKNOWN = 1 << 9,
+		DVAR_EXTERNAL = 1 << 10,
+		//DVAR_UNKNOWN3x = 1 << 11-13,
+		DVAR_SESSIONMODE = 1 << 15
+	};
+
 	struct dvar_t
 	{
 		dvarStrHash_t name;
 		const char* debugName;
 		const char* description;
-		unsigned int flags;
+		dvarFlags_e flags;
 		dvarType_t type;
 		bool modified;
 		DvarValue current;
