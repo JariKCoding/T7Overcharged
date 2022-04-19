@@ -12,10 +12,10 @@ namespace ui_error_hash
 		if (dvars::ui_error_callstack_ship->flags == 0)
 			return 1;
 
-		dvars::ui_error_callstack_ship->flags = 0;
+		dvars::ui_error_callstack_ship->flags = (game::dvarFlags_e)0;
 		game::Dvar_SetFromStringByName("ui_error_callstack_ship", "1", true);
 
-		dvars::ui_error_report_delay->flags = 0;
+		dvars::ui_error_report_delay->flags = (game::dvarFlags_e)0;
 		game::Dvar_SetFromStringByName("ui_error_report_delay", "0", true);
 
 		return 0;

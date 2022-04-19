@@ -50,6 +50,8 @@ InitializeT7Overcharged({
 	showExternalConsole = true
 })
 ```
+The [dvar hash list](usage/dvar_hash_list.txt) as of now isn't shipped with the DLL, it has to be manually placed inside of the root folder of Black Ops 3.
+
 
 ## Download
 
