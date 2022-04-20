@@ -608,4 +608,16 @@ namespace game
 		ScrString_t param1;
 		ScrString_t param2;
 	};
+
+	typedef void (*xcommand_t)(void);
+
+	struct cmd_function_t
+	{
+		cmd_function_t* next;
+		const char* name;
+		const char* autoCompleteDir;
+		const char* autoCompleteExt;
+		xcommand_t function;
+		int unknown;
+	};
 }

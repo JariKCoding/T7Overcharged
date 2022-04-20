@@ -6,8 +6,6 @@
 #include "utils/string.hpp"
 #include <utils/io.hpp>
 
-std::unordered_map<game::dvarStrHash_t, std::string> dvarHashMap_s;
-
 namespace console
 {
 	void print(std::string msg)
@@ -134,7 +132,6 @@ namespace console
 		return result;
 	}
 
-
 	class component final : public component_interface
 	{
 	public:
@@ -159,19 +156,12 @@ namespace console
 			//utils::hook::nop(REBASE(0x142153233), 7); // Dvar_ToggleInternal, remove (dvar->flags & 1) == 0
 			//utils::hook::nop(REBASE(0x142152973), 9);	// Dvar_Command, remove (dvar->flags & 1) == 0
 			//utils::hook::nop(REBASE(0x1422B92B0), 6);	// Dvar_CanChangeValue, remove (dvar->flags & 1) != 0
-			//utils::hook::nop(REBASE(0x1420EEFB0), 6);	// Cmd_List_f, remove i->unknown
-			//utils::hook::nop(REBASE(0x1420EDED1), 9);	// Cmd_ExecuteSingleCommandInternal, remove next->unknown
+			utils::hook::nop(REBASE(0x1420EEFB0), 6);	// Cmd_List_f, remove i->unknown
+			utils::hook::nop(REBASE(0x1420EDED1), 10);	// Cmd_ExecuteSingleCommandInternal, remove next->unknown
+			utils::hook::nop(REBASE(0x1420EDF90), 6);	// Cmd_ForEach, remove i->unknown
 
 			Com_EventLoop_hook.create(0x20F94B0, Com_EventLoop);
 			Dvar_GetDebugName_hook.create(0x22BDCB0, Dvar_GetDebugName);
-
-			//game::Com_Printf(0, game::CON_LABEL_DEFAULT_0, "Size of hash map %d", game::dvarHashMap_s.size());
-			//for (auto& pair : game::dvarHashMap_s)
-			//{
-			//	std::string print = utils::string::va("%s 0x%08X\n", pair.second.c_str(), pair.first);
-			//	game::Com_Printf(0, game::CON_LABEL_DEFAULT_0, print.c_str());
-			//	game::minlog.WriteLine(print.c_str());
-			//}
 		}
 
 		void destroy_hooks() override
