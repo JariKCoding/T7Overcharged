@@ -14,7 +14,7 @@ namespace console
 		game::minlog.WriteLine(utils::string::va("Print: %s", msg.c_str()));
 #endif
 		msg = "^7" + msg + "\n";
-		game::Com_Printf(0, game::consoleLabel_e::CON_LABEL_DEFAULT_0, msg.c_str());
+		game::Com_Printf(game::consoleChannel_e::CON_CHANNEL_DONT_FILTER, game::consoleLabel_e::CON_LABEL_DEFAULT, msg.c_str());
 	}
 
 	void print_info(std::string msg)
@@ -23,7 +23,7 @@ namespace console
 		game::minlog.WriteLine(utils::string::va("print_info: %s", msg.c_str()));
 #endif
 		msg = "^4" + msg + "\n";
-		game::Com_Printf(0, game::consoleLabel_e::CON_LABEL_DEFAULT_0, msg.c_str());
+		game::Com_Printf(game::consoleChannel_e::CON_CHANNEL_DONT_FILTER, game::consoleLabel_e::CON_LABEL_DEFAULT, msg.c_str());
 	}
 
 	void print_error(std::string msg)
@@ -36,7 +36,7 @@ namespace console
 		else
 			msg = "^1Error: " + msg + "\n";
 
-		game::Com_Printf(0, game::consoleLabel_e::CON_LABEL_DEFAULT_0, msg.c_str());
+		game::Com_Printf(game::consoleChannel_e::CON_CHANNEL_DONT_FILTER, game::consoleLabel_e::CON_LABEL_DEFAULT, msg.c_str());
 	}
 
 	void print_warning(std::string msg)
@@ -45,7 +45,7 @@ namespace console
 		game::minlog.WriteLine(utils::string::va("print_warning: %s", msg.c_str()));
 #endif
 		msg = "^3" + msg + "\n";
-		game::Com_Printf(0, game::consoleLabel_e::CON_LABEL_DEFAULT_0, msg.c_str());
+		game::Com_Printf(game::consoleChannel_e::CON_CHANNEL_DONT_FILTER, game::consoleLabel_e::CON_LABEL_DEFAULT, msg.c_str());
 	}
 
 	int print(lua::lua_State* s)
@@ -167,7 +167,7 @@ namespace console
 	{
 		for (int dvarIter = 0; dvarIter < *game::g_dvarCount; ++dvarIter)
 		{
-			//TODO: fix this
+			//TODO: don't ask
 			auto dvar = reinterpret_cast<const game::dvar_t*>(&game::s_dvarPool[160 * dvarIter]);
 
 			if ((!game::Com_SessionMode_IsMode(game::MODE_COUNT) || !Dvar_IsSessionModeBaseDvar(dvar))

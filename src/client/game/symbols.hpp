@@ -28,12 +28,12 @@ namespace game
 	static bool s_luaInFrontend = ((bool)(((uintptr_t)GetModuleHandle(NULL) + 0x3415BD8)));
 
 
-	WEAK symbol<bool(int channel, consoleLabel_e label, const char* fmt, ...)> Com_Printf{ (uintptr_t)GetModuleHandle(NULL) + 0x21499C0 };
-	WEAK symbol<bool(int channel, consoleLabel_e label, const char* msg, int error)> Com_PrintMessage{ (uintptr_t)GetModuleHandle(NULL) + 0x2149660 };
+	WEAK symbol<bool(consoleChannel_e channel, consoleLabel_e label, const char* fmt, ...)> Com_Printf{ (uintptr_t)GetModuleHandle(NULL) + 0x21499C0 };
+	WEAK symbol<bool(consoleChannel_e channel, consoleLabel_e label, const char* msg, int error)> Com_PrintMessage{ (uintptr_t)GetModuleHandle(NULL) + 0x2149660 };
 	WEAK symbol<const char* (const char* s0, const char* substr)> I_stristr{ (uintptr_t)GetModuleHandle(NULL) + 0x22EA2B0 };
 	WEAK symbol<__int64(int* a1, __int64 a2, __int64 a3)> PLmemset{ (uintptr_t)GetModuleHandle(NULL) + 0x2C3EA20 };
 	WEAK symbol<int(char* dest, size_t size, const char* fmt, ...)> Com_sprintf{ (uintptr_t)GetModuleHandle(NULL) + 0x2C3D620 };
-
+	WEAK symbol<int(char* string, unsigned int count, const char* format, char* ap)> vsnprintf{ (uintptr_t)GetModuleHandle(NULL) + 0x2C3DB30 };
 	WEAK symbol<game::dvarStrHash_t(const char* str)> Dvar_GenerateHash{ (uintptr_t)GetModuleHandle(NULL) + 0x133DBF0 };
 
 

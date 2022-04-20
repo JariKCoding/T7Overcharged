@@ -5,7 +5,7 @@
 #include "havok/hks_api.hpp"
 #include "havok/lua_api.hpp"
 
-namespace ui_error_hash
+namespace lua
 {
 	int remove(lua::lua_State* s)
 	{
@@ -21,6 +21,21 @@ namespace ui_error_hash
 		return 0;
 	}
 
+	utils::hook::detour Lua_CoD_LuaStateManager_Interface_ErrorPrint_hook;
+
+	void Lua_CoD_LuaStateManager_Interface_ErrorPrint(game::consoleLabel_e comLabel, const char* formatString, ...)
+	{
+		char string[4096]{};
+		va_list ap;
+
+		va_start(ap, formatString);
+		game::vsnprintf(string, 0x1000u, formatString, ap);
+		string[4095] = 0;
+		va_end(ap);
+
+		game::Com_Printf(game::CON_CHANNEL_ERROR, game::CON_LABEL_LUA, "^1Error: %s", string);
+	}
+
 	class component final : public component_interface
 	{
 	public:
@@ -33,7 +48,17 @@ namespace ui_error_hash
 			};
 			hks::hksI_openlib(game::UI_luaVM, "UIErrorHash", UIErrorHashLibrary, 0, 1);
 		}
+
+		void start_hooks() override
+		{
+			Lua_CoD_LuaStateManager_Interface_ErrorPrint_hook.create(0x1F132B0, Lua_CoD_LuaStateManager_Interface_ErrorPrint);
+		}
+
+		void destroy_hooks() override
+		{
+			Lua_CoD_LuaStateManager_Interface_ErrorPrint_hook.clear();
+		}
 	};
 }
 
-REGISTER_COMPONENT(ui_error_hash::component)
+REGISTER_COMPONENT(lua::component)
