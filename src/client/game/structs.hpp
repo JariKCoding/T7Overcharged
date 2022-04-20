@@ -495,7 +495,7 @@ namespace game
 		//DVAR_UNKNOWN3x = 1 << 11-13,
 		DVAR_SESSIONMODE = 1 << 15
 	};
-
+	//TODO: sizeof == 0x88 (136), need 0xA0 (160)
 	struct dvar_t
 	{
 		dvarStrHash_t name;

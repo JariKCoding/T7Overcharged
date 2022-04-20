@@ -168,7 +168,7 @@ namespace console
 		for (int dvarIter = 0; dvarIter < *game::g_dvarCount; ++dvarIter)
 		{
 			//TODO: fix this
-			const game::dvar_t* dvar = reinterpret_cast<const game::dvar_t*>(&game::s_dvarPool[160 * dvarIter]);
+			auto dvar = reinterpret_cast<const game::dvar_t*>(&game::s_dvarPool[160 * dvarIter]);
 
 			if ((!game::Com_SessionMode_IsMode(game::MODE_COUNT) || !Dvar_IsSessionModeBaseDvar(dvar))
 				&& !Dvar_IsSessionModeSpecificDvar(dvar))
@@ -177,6 +177,14 @@ namespace console
 				callback(localClientNum, DebugName);
 			}
 		}
+	}
+
+	utils::hook::detour Dvar_CanSetConfigDvar_hook;
+
+	bool Dvar_CanSetConfigDvar(const game::dvar_t* dvar)
+	{
+		//TODO: ???
+		return true;
 	}
 
 	class component final : public component_interface
@@ -199,28 +207,30 @@ namespace console
 		void start_hooks() override
 		{
 #define REBASE(address) (uintptr_t)((address - 0x140000000) + game::base)
-			utils::hook::nop(REBASE(0x142152652), 13);  // Com_DvarDumpSingle Dvar_GetFlags call
-			//utils::hook::nop(REBASE(0x142153233), 7); // Dvar_ToggleInternal, remove (dvar->flags & 1) == 0
-			//utils::hook::nop(REBASE(0x142152973), 9);	// Dvar_Command, remove (dvar->flags & 1) == 0
-			//utils::hook::nop(REBASE(0x1422B92B0), 6);	// Dvar_CanChangeValue, remove (dvar->flags & 1) != 0
 			utils::hook::nop(REBASE(0x1420EEFB0), 6);	// Cmd_List_f, remove i->unknown
 			utils::hook::nop(REBASE(0x1420EDED1), 10);	// Cmd_ExecuteSingleCommandInternal, remove next->unknown
 			utils::hook::nop(REBASE(0x1420EDF90), 6);	// Cmd_ForEach, remove i->unknown
-			//utils::hook::nop(REBASE(0x1422BD82A), 16);	// Dvar_ForEachName_Match
-			utils::hook::nop(REBASE(0x142152C80), 13);	// Dvar_ListSingle Dvar_GetFlags call
+			utils::hook::nop(REBASE(0x142152652), 13);	// Com_DvarDumpSingle, remove Dvar_GetFlags call
+			utils::hook::nop(REBASE(0x1422B92B0), 6);	// Dvar_CanChangeValue, remove (dvar->flags & 1) != 0
+			utils::hook::nop(REBASE(0x142152973), 7);	// Dvar_Command, remove (dvar->flags & 1) == 0
+			//utils::hook::nop(REBASE(0x1422BD82A), 16);	// Dvar_ForEachName_Match, remove (dvar->flags & 1) != 0, don't need rewrote function
+			utils::hook::nop(REBASE(0x142152C80), 13);	// Dvar_ListSingle, remove Dvar_GetFlags call
+			utils::hook::nop(REBASE(0x142153233), 9);	// Dvar_ToggleInternal, remove (dvar->flags & 1) == 0
 
 			Com_EventLoop_hook.create(0x20F94B0, Com_EventLoop);
-			Dvar_GetDebugName_hook.create(0x22BDCB0, Dvar_GetDebugName);
+			Dvar_CanSetConfigDvar_hook.create(0x22B92F0, Dvar_CanSetConfigDvar);
 			//Dvar_ForEachName_1_hook.create(0x22BD890, Dvar_ForEachName_Complete);
 			Dvar_ForEachName_2_hook.create(0x22BD7E0, Dvar_ForEachName_Match);
+			Dvar_GetDebugName_hook.create(0x22BDCB0, Dvar_GetDebugName);
 		}
 
 		void destroy_hooks() override
 		{
 			Com_EventLoop_hook.clear();
-			Dvar_GetDebugName_hook.clear();
-			Dvar_ForEachName_1_hook.clear();
+			Dvar_CanSetConfigDvar_hook.clear();
+			//Dvar_ForEachName_1_hook.clear();
 			Dvar_ForEachName_2_hook.clear();
+			Dvar_GetDebugName_hook.clear();
 		}
 	};
 }
