@@ -206,7 +206,6 @@ namespace console
 
 		void start_hooks() override
 		{
-#define REBASE(address) (uintptr_t)((address - 0x140000000) + game::base)
 			utils::hook::nop(REBASE(0x1420EEFB0), 6);	// Cmd_List_f, remove i->unknown
 			utils::hook::nop(REBASE(0x1420EDED1), 10);	// Cmd_ExecuteSingleCommandInternal, remove next->unknown
 			utils::hook::nop(REBASE(0x1420EDF90), 6);	// Cmd_ForEach, remove i->unknown
