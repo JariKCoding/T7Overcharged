@@ -57,4 +57,8 @@ namespace game
 	WEAK symbol<LocalClientNum_t(void*/*const DObj*/ obj)> DObjGetLocalClientIndex{ (uintptr_t)GetModuleHandle(NULL) + 0x2337A30 };
 
 	WEAK symbol<game::cmd_function_t*> cmd_functions{ (uintptr_t)GetModuleHandle(NULL) + 0x1689FF58 };
+
+	WEAK symbol<char> s_dvarPool{ (uintptr_t)GetModuleHandle(NULL) + 0x17AC8220 };
+	WEAK symbol<int> g_dvarCount{ (uintptr_t)GetModuleHandle(NULL) + 0x17AC81CC };
+
 }

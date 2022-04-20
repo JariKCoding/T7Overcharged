@@ -132,6 +132,53 @@ namespace console
 		return result;
 	}
 
+	bool Dvar_IsSessionModeBaseDvar(const game::dvar_t* dvar)
+	{
+		return dvar->type == game::DVAR_TYPE_SESSIONMODE_BASE_DVAR;
+	}
+
+	bool Dvar_IsSessionModeSpecificDvar(const game::dvar_t* dvar)
+	{
+		return (dvar->flags & 0x8000) != 0;
+	}
+
+	utils::hook::detour Dvar_ForEachName_1_hook;
+	utils::hook::detour Dvar_ForEachName_2_hook;
+
+	//void Dvar_ForEachName_Complete(void (*callback)(const char*)) // this is for CompleteCommand only
+	//{
+	//	const char* DebugName;
+	//	game::dvar_t* dvar;
+	//	int dvarIter;
+
+	//	for (dvarIter = 0; dvarIter < *game::g_dvarCount; ++dvarIter)
+	//	{
+	//		dvar = &*game::s_dvarPool[dvarIter];
+	//		if ((!game::Com_SessionMode_IsMode(game::MODE_COUNT) || !Dvar_IsSessionModeBaseDvar(dvar))
+	//			&& !Dvar_IsSessionModeSpecificDvar(dvar))
+	//		{
+	//			DebugName = Dvar_GetDebugName(dvar);
+	//			callback(DebugName);
+	//		}
+	//	}
+	//}
+
+	void Dvar_ForEachName_Match(game::LocalClientNum_t localClientNum, void (*callback)(game::LocalClientNum_t, const char*))
+	{
+		for (int dvarIter = 0; dvarIter < *game::g_dvarCount; ++dvarIter)
+		{
+			//TODO: fix this
+			const game::dvar_t* dvar = reinterpret_cast<const game::dvar_t*>(&game::s_dvarPool[160 * dvarIter]);
+
+			if ((!game::Com_SessionMode_IsMode(game::MODE_COUNT) || !Dvar_IsSessionModeBaseDvar(dvar))
+				&& !Dvar_IsSessionModeSpecificDvar(dvar))
+			{
+				const char* DebugName = Dvar_GetDebugName(dvar);
+				callback(localClientNum, DebugName);
+			}
+		}
+	}
+
 	class component final : public component_interface
 	{
 	public:
@@ -159,15 +206,21 @@ namespace console
 			utils::hook::nop(REBASE(0x1420EEFB0), 6);	// Cmd_List_f, remove i->unknown
 			utils::hook::nop(REBASE(0x1420EDED1), 10);	// Cmd_ExecuteSingleCommandInternal, remove next->unknown
 			utils::hook::nop(REBASE(0x1420EDF90), 6);	// Cmd_ForEach, remove i->unknown
+			//utils::hook::nop(REBASE(0x1422BD82A), 16);	// Dvar_ForEachName_Match
+			utils::hook::nop(REBASE(0x142152C80), 13);	// Dvar_ListSingle Dvar_GetFlags call
 
 			Com_EventLoop_hook.create(0x20F94B0, Com_EventLoop);
 			Dvar_GetDebugName_hook.create(0x22BDCB0, Dvar_GetDebugName);
+			//Dvar_ForEachName_1_hook.create(0x22BD890, Dvar_ForEachName_Complete);
+			Dvar_ForEachName_2_hook.create(0x22BD7E0, Dvar_ForEachName_Match);
 		}
 
 		void destroy_hooks() override
 		{
 			Com_EventLoop_hook.clear();
 			Dvar_GetDebugName_hook.clear();
+			Dvar_ForEachName_1_hook.clear();
+			Dvar_ForEachName_2_hook.clear();
 		}
 	};
 }
