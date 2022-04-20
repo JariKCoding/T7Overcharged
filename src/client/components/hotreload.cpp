@@ -113,7 +113,7 @@ namespace hotreload
 
 		std::string luaThreadCode = "local UIRootFull = LUI.roots.UIRootFull;"
 			"UIRootFull.HUDRefreshTimer = LUI.UITimer.newElementTimer(1000, false, function()"
-				"HotReload.CheckForNewFiles();"
+			"HotReload.CheckForNewFiles();"
 			"end);"
 			"UIRootFull:addElement(UIRootFull.HUDRefreshTimer);";
 		hks::execute_raw_lua(luaThreadCode, "HotReloadThread");

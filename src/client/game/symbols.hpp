@@ -14,12 +14,12 @@ namespace game
 
 	WEAK symbol<const char* (const char* name)> UI_SafeTranslateString{ (uintptr_t)GetModuleHandle(NULL) + 0x228F7B0 };
 
-	WEAK symbol<INT64 (const char* name, int imageTrack, bool errorIfMissing, int waitTime)> Material_RegisterHandle{ (uintptr_t)GetModuleHandle(NULL) + 0x1CD4B90 };
+	WEAK symbol<INT64(const char* name, int imageTrack, bool errorIfMissing, int waitTime)> Material_RegisterHandle{ (uintptr_t)GetModuleHandle(NULL) + 0x1CD4B90 };
 
-	WEAK symbol<int (INT64 lobbySession, LobbyClientType clientType)> LobbySession_GetClientCount{ (uintptr_t)GetModuleHandle(NULL) + 0x1ED8B30 };
+	WEAK symbol<int(INT64 lobbySession, LobbyClientType clientType)> LobbySession_GetClientCount{ (uintptr_t)GetModuleHandle(NULL) + 0x1ED8B30 };
 
-	WEAK symbol<void (const char* dvarName, const char* string, bool createIfMissing)> Dvar_SetFromStringByName{ (uintptr_t)GetModuleHandle(NULL) + 0x22C7F60 };
-	WEAK symbol<bool (const dvar_t* dvar)> Dvar_GetBool{ (uintptr_t)GetModuleHandle(NULL) + 0x22BD930 };
+	WEAK symbol<void(const char* dvarName, const char* string, bool createIfMissing)> Dvar_SetFromStringByName{ (uintptr_t)GetModuleHandle(NULL) + 0x22C7F60 };
+	WEAK symbol<bool(const dvar_t* dvar)> Dvar_GetBool{ (uintptr_t)GetModuleHandle(NULL) + 0x22BD930 };
 	WEAK symbol<const char* (const dvar_t* dvar)> Dvar_GetString{ (uintptr_t)GetModuleHandle(NULL) + 0x22BFFF0 };
 
 	WEAK symbol<int(XAssetType type)> DB_GetXAssetTypeSize{ (uintptr_t)GetModuleHandle(NULL) + 0x13E9DD0 };
@@ -44,17 +44,17 @@ namespace game
 	WEAK symbol<void(LUIScopedEvent* event, lua::lua_State* luaVM, const char* rootName, const char* eventName)> GetLUIScopedEvent{ (uintptr_t)GetModuleHandle(NULL) + 0x26FF350 };
 	WEAK symbol<void(LUIScopedEvent* event)> ExecuteLUIScopedEvent{ (uintptr_t)GetModuleHandle(NULL) + 0x26FF580 };
 
-	WEAK symbol<int ()> Sys_IsDatabaseReady2{ (uintptr_t)GetModuleHandle(NULL) + 0x2184490 };
+	WEAK symbol<int()> Sys_IsDatabaseReady2{ (uintptr_t)GetModuleHandle(NULL) + 0x2184490 };
 
 	WEAK symbol<ScrString_t(const char* s)> GScr_AllocString{ (uintptr_t)GetModuleHandle(NULL) + 0x1A83520 };
 
-	WEAK symbol<int(void* ps, void* weapon/*const playerState_t* ps, const Weapon weapon*/)> BG_GetAmmoInClip{(uintptr_t)GetModuleHandle(NULL) + 0x26E7310};
+	WEAK symbol<int(void* ps, void* weapon/*const playerState_t* ps, const Weapon weapon*/)> BG_GetAmmoInClip{ (uintptr_t)GetModuleHandle(NULL) + 0x26E7310 };
 	WEAK symbol<int(void* ps, void* weapon/*const playerState_t* ps, const Weapon weapon*/)> BG_GetTotalAmmoReserve{ (uintptr_t)GetModuleHandle(NULL) + 0x26E7AB0 };
 	WEAK symbol<bool(void* weapon/*const Weapon weapon*/)> BG_IsLeftHandWeapon{ (uintptr_t)GetModuleHandle(NULL) + 0x26F4A90 };
 
 	WEAK symbol<int(void*/*const DObj*/ obj, ScrString_t name, BoneIndex* index, int modelNum)> DObjGetBoneIndex{ (uintptr_t)GetModuleHandle(NULL) + 0x233DF70 };
 	WEAK symbol<int(void*/*const DObj*/ obj, int* partBits, uint16_t boneIndex, const vec3_t* trans, const vec3_t* angles)> DObjSetLocalTag{ (uintptr_t)GetModuleHandle(NULL) + 0x233EDE0 };
-	WEAK symbol<LocalClientNum_t (void*/*const DObj*/ obj)> DObjGetLocalClientIndex{ (uintptr_t)GetModuleHandle(NULL) + 0x2337A30 };
+	WEAK symbol<LocalClientNum_t(void*/*const DObj*/ obj)> DObjGetLocalClientIndex{ (uintptr_t)GetModuleHandle(NULL) + 0x2337A30 };
 
 	WEAK symbol<game::cmd_function_t*> cmd_functions{ (uintptr_t)GetModuleHandle(NULL) + 0x1689FF58 };
 }

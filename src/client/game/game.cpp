@@ -14,7 +14,7 @@
 
 namespace game
 {
-    uintptr_t base = (uintptr_t)GetModuleHandle(NULL);
+	uintptr_t base = (uintptr_t)GetModuleHandle(NULL);
 	MinLog minlog = MinLog();
 	std::unordered_map<game::dvarStrHash_t, std::string> dvarHashMap_s;
 
@@ -23,10 +23,10 @@ namespace game
 		auto file = utils::io::read_file("dvar_hash_list.txt");
 		// remove carriage return because std::getline is lame
 		file.erase(std::ranges::remove(file, '\r').begin(), file.end());
-		
+
 		std::istringstream file_str{ file };
 		std::string line;
-		
+
 		while (std::getline(file_str, line, '\n'))
 		{
 			const auto separator = line.find(',');
