@@ -33,7 +33,7 @@ namespace lua
 		string[4095] = 0;
 		va_end(ap);
 
-		game::Com_Printf(game::CON_CHANNEL_ERROR, game::CON_LABEL_LUA, "^1Error: %s", string);
+		game::Com_Printf(game::CON_CHANNEL_ERROR, game::CON_LABEL_LUA, "%s", string);
 	}
 
 	class component final : public component_interface
