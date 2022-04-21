@@ -10,6 +10,7 @@ namespace game
 	/* BG */
 	WEAK symbol<int(void* ps, void* weapon/*const playerState_t* ps, const Weapon weapon*/)> BG_GetAmmoInClip{ OFFSET(0x1426E7310) };
 	WEAK symbol<int(void* ps, void* weapon/*const playerState_t* ps, const Weapon weapon*/)> BG_GetTotalAmmoReserve{ OFFSET(0x1426E7AB0) };
+	WEAK symbol<int(void* weapon/*const Weapon weapon*/)> BG_GetClipSize{ OFFSET(0x1426E75D0) };
 	WEAK symbol<bool(void* weapon/*const Weapon weapon*/)> BG_IsLeftHandWeapon{ OFFSET(0x1426F4A90) };
 
 	/* BUILT-IN */
@@ -76,4 +77,6 @@ namespace game
 	/* SYS */
 	WEAK symbol<int()> Sys_IsDatabaseReady2{ OFFSET(0x142184490) };
 	WEAK symbol<void()> Sys_ShowConsole{ OFFSET(0x142333F80) };
+	WEAK symbol<bool()> Sys_IsMainThread{ OFFSET(0x1421844F0) };
+
 }
