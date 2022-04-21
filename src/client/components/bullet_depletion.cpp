@@ -93,17 +93,17 @@ namespace bullet_depletion
 	class component final : public component_interface
 	{
 	public:
-		void start_hooks() override
-		{
-			cg_updateviewmodeldynamicbones_hook.create(0x126EE90, &cg_updateviewmodeldynamicbones_internal);
-			cg_processclientnote_hook.create(0x255C70, &cg_processclientnote_internal);
-		}
+		//void start_hooks() override
+		//{
+		//	cg_updateviewmodeldynamicbones_hook.create(0x126EE90, &cg_updateviewmodeldynamicbones_internal);
+		//	cg_processclientnote_hook.create(0x255C70, &cg_processclientnote_internal);
+		//}
 
-		void destroy_hooks() override
-		{
-			cg_updateviewmodeldynamicbones_hook.clear();
-			cg_processclientnote_hook.clear();
-		}
+		//void destroy_hooks() override
+		//{
+		//	cg_updateviewmodeldynamicbones_hook.clear();
+		//	cg_processclientnote_hook.clear();
+		//}
 	};
 }
 

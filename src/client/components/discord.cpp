@@ -55,7 +55,7 @@ namespace discord
 				discord_presence.state = utils::string::va("Round %d", roundsPlayed);
 				discord_presence.details = map;
 			}
-			
+
 
 			if (!discord_presence.startTimestamp)
 			{
@@ -131,24 +131,24 @@ namespace discord
 		void start_hooks() override
 		{
 			isIngame = true;
-			std::string raw_lua = 
+			std::string raw_lua =
 				"LUI.roots.UIRoot0:subscribeToGlobalModel(0, 'GameScore', 'roundsPlayed', function(model) "
-					"local roundsPlayed = Engine.GetModelValue(model); "
-					"if roundsPlayed then "
-						"DiscordRPC.SetRoundsPlayed(roundsPlayed - 1); "
-					"end; "
+				"local roundsPlayed = Engine.GetModelValue(model); "
+				"if roundsPlayed then "
+				"DiscordRPC.SetRoundsPlayed(roundsPlayed - 1); "
+				"end; "
 				"end); "
 				"LUI.roots.UIRoot0:subscribeToGlobalModel(0, 'GameScore', 'playerScore', function(model) "
-					"local playerScore = Engine.GetModelValue(model); "
-					"if playerScore and not Engine.IsVisibilityBitSet( 0, Enum.UIVisibilityBit.BIT_IN_KILLCAM ) then "
-						"DiscordRPC.SetPlayerScore(playerScore); "
-					"end; "
+				"local playerScore = Engine.GetModelValue(model); "
+				"if playerScore and not Engine.IsVisibilityBitSet( 0, Enum.UIVisibilityBit.BIT_IN_KILLCAM ) then "
+				"DiscordRPC.SetPlayerScore(playerScore); "
+				"end; "
 				"end); "
 				"LUI.roots.UIRoot0:subscribeToGlobalModel(0, 'GameScore', 'enemyScore', function(model) "
-					"local enemyScore = Engine.GetModelValue(model); "
-					"if enemyScore and not Engine.IsVisibilityBitSet( 0, Enum.UIVisibilityBit.BIT_IN_KILLCAM ) then "
-						"DiscordRPC.SetEnemyScore(enemyScore); "
-					"end; "
+				"local enemyScore = Engine.GetModelValue(model); "
+				"if enemyScore and not Engine.IsVisibilityBitSet( 0, Enum.UIVisibilityBit.BIT_IN_KILLCAM ) then "
+				"DiscordRPC.SetEnemyScore(enemyScore); "
+				"end; "
 				"end); ";
 			hks::execute_raw_lua(raw_lua, "DiscordScoreModels");
 		}

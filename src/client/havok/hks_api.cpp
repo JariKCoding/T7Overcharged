@@ -18,7 +18,7 @@ namespace hks
 
     int hksi_lua_type(lua::lua_State* s, int index)
     {
-        lua::HksErrorFunctionType v2;
+        //lua::HksErrorFunctionType v2;
         int v4;
         lua::HksObject* v5;
         int failure;
@@ -86,7 +86,7 @@ namespace hks
 
     int hksi_lua_isstring(lua::lua_State* s, int index)
     {
-        lua::HksErrorFunctionType v2;
+        //lua::HksErrorFunctionType v2;
         int v4;
         lua::HksObject* v5;
         int failure;

@@ -14,7 +14,7 @@ namespace fastfiles
 		game::minlog.WriteLine(utils::string::va("Loading fastfile %s\n", zoneName));
 		return db_try_load_x_file_internal_hook.invoke<void>(zoneName, zone_flags, is_base_map);
 	}
-	
+
 	class component final : public component_interface
 	{
 	public:

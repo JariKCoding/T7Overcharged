@@ -24,6 +24,8 @@ extern "C"
 		}
 
 		game::minlog.WriteLine("T7Overchared initiated");
+
+		game::LoadDvarHashMap();
 		return 1;
 	}
 }
