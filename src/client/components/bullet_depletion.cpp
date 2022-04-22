@@ -7,64 +7,41 @@
 namespace bullet_depletion
 {
 	utils::hook::detour cg_updateviewmodeldynamicbones_hook;
-	utils::hook::detour cg_viewmodelprocessnote_hook;
-	utils::hook::detour xanimprocessclientnotify_hook;
+	utils::hook::detour CG_PlayRumbleOnEntity_hook;
 
 	static bool bullet_depletion_enabled[2][2] = {{true, true}, {true, true}};
 	static bool bullet_depletion_reload_mode_enabled[2][2] = { {false, false}, {false, false} };
 
-	game::ScrString_t disable_bullet_depletion_str = game::GScr_AllocString("disable bullet depletion");
-	game::ScrString_t enable_bullet_depletion_str = game::GScr_AllocString("enable bullet depletion");
-	game::ScrString_t disable_reload_bullet_depletion_str = game::GScr_AllocString("disable mode reload bullet depletion");
-	game::ScrString_t enable_reload_bullet_depletion_str = game::GScr_AllocString("enable mode reload bullet depletion");
-	game::ScrString_t right_str = game::GScr_AllocString("right");
-	game::ScrString_t left_str = game::GScr_AllocString("left");
+	game::ScrString_t disable_bullet_depletion_right_str = game::GScr_AllocString("disable bullet depletion right");
+	game::ScrString_t enable_bullet_depletion_right_str = game::GScr_AllocString("enable bullet depletion right");
+	game::ScrString_t disable_reload_bullet_depletion_right_str = game::GScr_AllocString("disable reload mode bullet depletion right");
+	game::ScrString_t enable_reload_bullet_depletion_right_str = game::GScr_AllocString("enable reload mode bullet depletion right");
+	game::ScrString_t disable_bullet_depletion_left_str = game::GScr_AllocString("disable bullet depletion left");
+	game::ScrString_t enable_bullet_depletion_left_str = game::GScr_AllocString("enable bullet depletion left");
+	game::ScrString_t disable_reload_bullet_depletion_left_str = game::GScr_AllocString("disable reload mode bullet depletion left");
+	game::ScrString_t enable_reload_bullet_depletion_left_str = game::GScr_AllocString("enable reload mode bullet depletion left");
 
-	void cg_updateviewmodeldynamicbones_internal(game::cg_t* cgameGlob, void* ps, void* obj, void* weapon, void* cent)
+	enum handType : BYTE
 	{
-		//game::minlog.WriteLine("pre invoke");
-		cg_updateviewmodeldynamicbones_hook.invoke<void>(cgameGlob, ps, obj, weapon, cent);
-		//game::minlog.WriteLine("post invoke");
+		HAND_RIGHT = 0x0,
+		HAND_LEFT = 0x1
+	};
 
-		if (!cgameGlob)
-			return;
-		//game::minlog.WriteLine("post cgameGlob check");
-
-		//if (game::CG_InAnimatedCamera(cgameGlob->localClientNum))
-		//	return;
-		//game::minlog.WriteLine("post inanimated camera");
-
-		if (!obj || !game::Sys_IsMainThread())
-		{
-			game::minlog.WriteLine("Freezefix?");
-			return;
-		}
-		//game::minlog.WriteLine("post obj thread");
-
-		game::LocalClientNum_t localClientNum = game::DObjGetLocalClientIndex(obj);
-		//game::minlog.WriteLine(utils::string::va("post localClientNum: %d", localClientNum));
-		auto isLeftHand = game::BG_IsLeftHandWeapon(weapon);
-		//game::minlog.WriteLine(utils::string::va("post isLeftHand", isLeftHand));
-		if (!bullet_depletion_enabled[localClientNum][isLeftHand])
-			return;
-
+	void handle_bullet_depletion(game::LocalClientNum_t localClientNum, void* ps, void* obj, void* weapon, handType handType)
+	{
 		int clipSize = game::BG_GetClipSize(weapon);
-		//game::minlog.WriteLine(utils::string::va("clipSize: %d", clipSize));
-		if (clipSize <= 0)
-			return;
-
+		int ammoInClip = game::BG_GetAmmoInClip(ps, weapon);
+		if (bullet_depletion_reload_mode_enabled[localClientNum][handType])
+			ammoInClip += game::BG_GetTotalAmmoReserve(ps, weapon);
 
 		int i = 0;
-		game::BoneIndex bone;
 		while (i < clipSize)
 		{
-			game::ScrString_t tname = game::GScr_AllocString(utils::string::va("tag_bullet_deplete_sqtl_%02d_animate%s", i, isLeftHand ? "_le" : ""));
+			game::ScrString_t tname = game::GScr_AllocString(utils::string::va("tag_bullet_deplete_sqtl_%02d_animate%s", i, handType == handType::HAND_LEFT ? "_le" : ""));
+			game::BoneIndex bone;
 			if (game::DObjGetBoneIndex(obj, tname, &bone, -1))
 			{
-				int maxAmount = game::BG_GetAmmoInClip(ps, weapon);
-				if (bullet_depletion_reload_mode_enabled[localClientNum][isLeftHand])
-					maxAmount += game::BG_GetTotalAmmoReserve(ps, weapon);
-				if (maxAmount <= i)
+				if (ammoInClip <= i)
 				{
 					game::vec3_t newOrigin = { 0, 0, -100000 };
 					game::vec3_t angles = { 0, 0, 0 };
@@ -84,15 +61,11 @@ namespace bullet_depletion
 		i = 0;
 		while (i < clipSize)
 		{
-			game::ScrString_t tname = game::GScr_AllocString(utils::string::va("tag_bullet_deplete_swap_%02d_animate%s", i, isLeftHand ? "_le" : ""));
+			game::ScrString_t tname = game::GScr_AllocString(utils::string::va("tag_bullet_deplete_swap_%02d_animate%s", i, handType == handType::HAND_LEFT ? "_le" : ""));
+			game::BoneIndex bone;
 			if (game::DObjGetBoneIndex(obj, tname, &bone, -1))
 			{
-				int maxAmount = game::BG_GetAmmoInClip(ps, weapon);
-				if (bullet_depletion_reload_mode_enabled[localClientNum][isLeftHand])
-					maxAmount += game::BG_GetTotalAmmoReserve(ps, weapon);
-				if (maxAmount > clipSize)
-					maxAmount = clipSize;
-				if (maxAmount != i)
+				if (ammoInClip != i)
 				{
 					game::vec3_t newOrigin = { 0, 0, -100000 };
 					game::vec3_t angles = { 0, 0, 0 };
@@ -110,123 +83,70 @@ namespace bullet_depletion
 		}
 	}
 
-	bool cg_viewmodelprocessnote_only_when_visible_internal(game::XAnimNotifyInfo* notifyInfo)
+	void cg_updateviewmodeldynamicbones_internal(game::cg_t* cgameGlob, void* ps, void* obj, void* weapon, void* cent)
 	{
-		game::minlog.WriteLine("pre cg_viewmodelprocessnote invoke");
-		auto result = cg_viewmodelprocessnote_hook.invoke<bool>(notifyInfo);
-		
-		game::minlog.WriteLine("post cg_viewmodelprocessnoteinvoke");
+		cg_updateviewmodeldynamicbones_hook.invoke<void>(cgameGlob, ps, obj, weapon, cent);
 
-		return result;
-		//if (result == false)
-		//	return false;
+		if (!cgameGlob)
+			return;
 
-		/*game::minlog.WriteLine("post cg_viewmodelprocessnoteinvoke true");
-		if (!obj || !game::Sys_IsMainThread() || !notifyInfo)
-			return false;
-		game::minlog.WriteLine("post cg_viewmodelprocessnote obj thread");
+		if (!obj || !game::Sys_IsMainThread())
+			return;
 
-		if (notifyInfo->type == enable_bullet_depletion_str)
+		auto localClientNum = game::DObjGetLocalClientIndex(obj);
+
+		if (bullet_depletion_enabled[localClientNum][handType::HAND_RIGHT])
 		{
-			game::minlog.WriteLine("enable_bullet_depletion_str");
-			bullet_depletion_enabled[localClientNum][notifyInfo->param1 == left_str] = true;
+			handle_bullet_depletion(localClientNum, ps, obj, weapon, handType::HAND_RIGHT);
 		}
-		else if (notifyInfo->type == disable_bullet_depletion_str)
+		if (bullet_depletion_enabled[localClientNum][handType::HAND_LEFT] && game::BG_IsDualWield(weapon))
 		{
-			game::minlog.WriteLine("disable_bullet_depletion_str");
-			bullet_depletion_enabled[localClientNum][notifyInfo->param1 == left_str] = false;
+			auto leftWeapon = game::BG_GetDualWieldWeapon(weapon);
+			handle_bullet_depletion(localClientNum, ps, obj, leftWeapon, handType::HAND_LEFT);
 		}
-		else if (notifyInfo->type == enable_reload_bullet_depletion_str)
-		{
-			game::minlog.WriteLine("enable_reload_bullet_depletion_str");
-			bullet_depletion_reload_mode_enabled[localClientNum][notifyInfo->param1 == left_str] = true;
-		}
-		else if (notifyInfo->type == disable_reload_bullet_depletion_str)
-		{
-			game::minlog.WriteLine("disable_reload_bullet_depletion_str");
-			bullet_depletion_reload_mode_enabled[localClientNum][notifyInfo->param1 == left_str] = false;
-		}
-		return true;*/
 	}
 
-	void xanimprocessclientnotify_internal(__int64 obj, __int64 info, __int64 dtime, char forceProcess, char skipNonImportantNotifies)
+	void CG_PlayRumbleOnEntity_internal(game::LocalClientNum_t localClientNum, game::ScrString_t rumbleName, int entityNum)
 	{
-		float v5; // xmm1_4
-		float v6; // xmm4_4
-		unsigned __int16 notifyFilter; // r11
-		bool v11; // zf
-		__int64 v12; // rdx
-		__int64 v13; // r9
-		__int64 v14; // rax
-		__int64 v15; // rdx
-		float v16; // xmm0_4
-		float v17; // xmm5_4
-		__int64 v18; // r14
-		unsigned __int16 v19; // si
-		float v20; // xmm2_4
-		float* v21; // rbx
-		float v22; // xmm0_4
-		int v23; // er15
-		int v24; // er15
-		float* i; // rbx
-		int v26; // er15
-		int v27; // er15
+		if (rumbleName != enable_bullet_depletion_right_str && rumbleName != enable_bullet_depletion_left_str && rumbleName != disable_bullet_depletion_right_str && rumbleName != disable_bullet_depletion_left_str &&
+			rumbleName != enable_reload_bullet_depletion_right_str && rumbleName != enable_reload_bullet_depletion_left_str && rumbleName != disable_reload_bullet_depletion_right_str && rumbleName != disable_reload_bullet_depletion_left_str)
+			return CG_PlayRumbleOnEntity_hook.invoke<void>(localClientNum, rumbleName, entityNum);
 
-		/*v5 = *(float*)(info + 20);
-		v6 = 1.0;
-		notifyFilter = *(WORD*)(info + 60);
-		if (v5 == 1.0)
+		auto isLeftHand = rumbleName != enable_bullet_depletion_right_str && rumbleName != disable_bullet_depletion_right_str &&
+			rumbleName != enable_reload_bullet_depletion_right_str && rumbleName != disable_reload_bullet_depletion_right_str;
+
+		if (rumbleName == enable_bullet_depletion_right_str || rumbleName == enable_bullet_depletion_left_str)
 		{
-			if (!*(DWORD*)(info + 48))
-			{
-				v11 = (*(BYTE*)(info + 8) & 3) == 0;
-				v12 = (unsigned int)game::GScr_AllocString("end");
-				v13 = notifyFilter;
-				if (!v11)
-					v12 = (unsigned int)game::GScr_AllocString("loop_end");
-			LABEL_5:
-				game::CG_ProcessClientEndNote(obj, v12, info, v13);
-				return;
-			}
-			v14 = *(UINT64*)(info + 8);
-			if (!v14 || (v15 = (unsigned int)game::GScr_AllocString("loop_end"), !*(BYTE*)(v14 + 36)))
-				v15 = (unsigned int)game::GScr_AllocString("end");
-			game::CG_ProcessClientEndNote(obj, v15, info, notifyFilter);
-		}*/
-	}
-
-	void cg_processclientnote_internal(void* obj, const game::XAnimNotifyInfo* notifyInfo, void* info, const unsigned int notifyFilter, bool shutdown, bool skipNonImportantNotifies)
-	{
-		game::minlog.WriteLine("cg_processclientnote_internal");
+			bullet_depletion_enabled[localClientNum][isLeftHand] = true;
+		}
+		else if (rumbleName == disable_bullet_depletion_right_str || rumbleName == disable_bullet_depletion_left_str)
+		{
+			bullet_depletion_enabled[localClientNum][isLeftHand] = false;
+		}
+		else if (rumbleName == enable_reload_bullet_depletion_right_str || rumbleName == enable_reload_bullet_depletion_left_str)
+		{
+			bullet_depletion_reload_mode_enabled[localClientNum][isLeftHand] = true;
+		}
+		else if (rumbleName == disable_reload_bullet_depletion_right_str || rumbleName == disable_reload_bullet_depletion_left_str)
+		{
+			bullet_depletion_reload_mode_enabled[localClientNum][isLeftHand] = false;
+		}
 	}
 
 	class component final : public component_interface
 	{
 	public:
-		//void start_hooks() override
-		//{
-		//	cg_updateviewmodeldynamicbones_hook.create(0x126EE90, &cg_updateviewmodeldynamicbones_internal);
-		//	cg_processclientnote_hook.create(0x255C70, &cg_processclientnote_internal);
-		//}
-
-		//void destroy_hooks() override
-		//{
-		//	cg_updateviewmodeldynamicbones_hook.clear();
-		//	cg_processclientnote_hook.clear();
-		//}
-		/*void start_hooks() override
+		void start_hooks() override
 		{
 			cg_updateviewmodeldynamicbones_hook.create(0x126EE90, &cg_updateviewmodeldynamicbones_internal);
-			//cg_viewmodelprocessnote_hook.create(0x24E080, &cg_viewmodelprocessnote_only_when_visible_internal);
-			//cg_viewmodelprocessnote_hook.create(0x2343710, &xanimprocessclientnotify_internal);
-			//utils::hook::call(OFFSET(0x2343866), &cg_processclientnote_internal);
+			CG_PlayRumbleOnEntity_hook.create(0x9E6C90, &CG_PlayRumbleOnEntity_internal);
 		}
 
 		void destroy_hooks() override
 		{
 			cg_updateviewmodeldynamicbones_hook.clear();
-			cg_viewmodelprocessnote_hook.clear();
-		}*/
+			CG_PlayRumbleOnEntity_hook.clear();
+		}
 	};
 }
 

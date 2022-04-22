@@ -2014,4 +2014,16 @@ namespace game
 		ClientNum_t clientNum;
 		LocalClientNum_t localClientNum;
 	};
+
+	struct __declspec(align(8)) cpose_t
+	{
+		BYTE eType;
+		BYTE eTypePrev;
+		BYTE localClientNum;
+	};
+
+	struct centity_t
+	{
+		cpose_t pose;
+	};
 }
