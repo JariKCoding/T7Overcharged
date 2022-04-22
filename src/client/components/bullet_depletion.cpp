@@ -76,7 +76,8 @@ namespace bullet_depletion
 
 	void cg_processclientnote_internal(void* obj, const game::XAnimNotifyInfo* notifyInfo, void* info, const unsigned int notifyFilter, bool shutdown, bool skipNonImportantNotifies)
 	{
-		cg_processclientnote_hook.invoke<void>(obj, notifyInfo, info, notifyFilter, shutdown, skipNonImportantNotifies);
+		game::CG_ProcessClientNote(obj, notifyInfo, info, notifyFilter, shutdown, skipNonImportantNotifies);
+		//cg_processclientnote_hook.invoke<void>(obj, notifyInfo, info, notifyFilter, shutdown, skipNonImportantNotifies);
 
 		if (notifyInfo->type == enable_bullet_depletion_str)
 		{
@@ -89,21 +90,58 @@ namespace bullet_depletion
 			bullet_depletion_enabled[localClientNum] = false;
 		}
 	}
+	
+	utils::hook::detour XAnimProcessClientNotify_hook;
+
+	void XAnimProcessClientNotify(void* obj, game::XAnimNotifyInfo* info, float dtime, bool forceProcess, bool skipNonImportantNotifies)
+	{
+		XAnimProcessClientNotify_hook.invoke<void>(obj, info, dtime, forceProcess, skipNonImportantNotifies);
+
+		if (info->type == enable_bullet_depletion_str)
+		{
+			game::LocalClientNum_t localClientNum = game::DObjGetLocalClientIndex(obj);
+			bullet_depletion_enabled[localClientNum] = true;
+		}
+		else if (info->type == disable_bullet_depletion_str)
+		{
+			game::LocalClientNum_t localClientNum = game::DObjGetLocalClientIndex(obj);
+			bullet_depletion_enabled[localClientNum] = false;
+		}
+	}
+
+	//utils::hook::detour CG_ProcessClientNote_1;
+	//utils::hook::detour CG_ProcessClientNote_2;
+	//utils::hook::detour CG_ProcessClientNote_3;
+	//utils::hook::detour CG_ProcessClientNote_4;
+	//utils::hook::detour CG_ProcessClientNote_5;
 
 	class component final : public component_interface
 	{
 	public:
-		//void start_hooks() override
-		//{
-		//	cg_updateviewmodeldynamicbones_hook.create(0x126EE90, &cg_updateviewmodeldynamicbones_internal);
-		//	cg_processclientnote_hook.create(0x255C70, &cg_processclientnote_internal);
-		//}
+		void start_hooks() override
+		{
+			cg_updateviewmodeldynamicbones_hook.create(REBASE(0x14126EE90), &cg_updateviewmodeldynamicbones_internal);
+			XAnimProcessClientNotify_hook.create(REBASE(0x142343710), &XAnimProcessClientNotify);
+			//cg_processclientnote_hook.create(0x255C70, &cg_processclientnote_internal);
 
-		//void destroy_hooks() override
-		//{
-		//	cg_updateviewmodeldynamicbones_hook.clear();
-		//	cg_processclientnote_hook.clear();
-		//}
+			//CG_ProcessClientNote_1.create(REBASE(0x1423439CA), &cg_processclientnote_internal);
+			//CG_ProcessClientNote_2.create(REBASE(0x142343866), &cg_processclientnote_internal);
+			//CG_ProcessClientNote_3.create(REBASE(0x1423438C6), &cg_processclientnote_internal);
+			//CG_ProcessClientNote_4.create(REBASE(0x142343916), &cg_processclientnote_internal);
+			//CG_ProcessClientNote_5.create(REBASE(0x142343966), &cg_processclientnote_internal);
+		}
+
+		void destroy_hooks() override
+		{
+			cg_updateviewmodeldynamicbones_hook.clear();
+			//cg_processclientnote_hook.clear();
+
+			//CG_ProcessClientNote_1.clear();
+			//CG_ProcessClientNote_2.clear();
+			//CG_ProcessClientNote_3.clear();
+			//CG_ProcessClientNote_4.clear();
+			//CG_ProcessClientNote_5.clear();
+		}
 	};
 }
 
