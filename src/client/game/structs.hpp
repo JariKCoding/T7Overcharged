@@ -10,6 +10,7 @@ namespace game
 	typedef uint32_t dvarStrHash_t;
 	typedef uint32_t ScrString_t;
 	typedef int16_t BoneIndex;
+	typedef unsigned int ScrVarCanonicalName_t;
 	struct dvar_t;
 
 	enum dvarType_t : __int32
@@ -268,6 +269,61 @@ namespace game
 		LOCAL_CLIENT_2 = 0x2,
 		LOCAL_CLIENT_3 = 0x3,
 		LOCAL_CLIENT_COUNT = 0x4,
+	};
+
+	enum class scriptInstance_t : int
+	{
+		SCRIPTINSTANCE_SERVER = 0x0,
+		SCRIPTINSTANCE_CLIENT = 0x1,
+		SCRIPT_INSTANCE_MAX = 0x2,
+	};
+
+	enum ClientNum_t : __int32
+	{
+		INVALID_CLIENT_INDEX = -1,
+		CLIENT_INDEX_0 = 0x0,
+		CLIENT_INDEX_FIRST = 0x0,
+		CLIENT_INDEX_1 = 0x1,
+		CLIENT_INDEX_2 = 0x2,
+		CLIENT_INDEX_3 = 0x3,
+		CLIENT_INDEX_4 = 0x4,
+		CLIENT_INDEX_5 = 0x5,
+		CLIENT_INDEX_6 = 0x6,
+		CLIENT_INDEX_7 = 0x7,
+		CLIENT_INDEX_8 = 0x8,
+		CLIENT_INDEX_9 = 0x9,
+		CLIENT_INDEX_10 = 0xA,
+		CLIENT_INDEX_11 = 0xB,
+		CLIENT_INDEX_12 = 0xC,
+		CLIENT_INDEX_13 = 0xD,
+		CLIENT_INDEX_14 = 0xE,
+		CLIENT_INDEX_15 = 0xF,
+		CLIENT_INDEX_16 = 0x10,
+		CLIENT_INDEX_17 = 0x11,
+		CLIENT_INDEX_18 = 0x12,
+		CLIENT_INDEX_19 = 0x13,
+		CLIENT_INDEX_20 = 0x14,
+		CLIENT_INDEX_21 = 0x15,
+		CLIENT_INDEX_22 = 0x16,
+		CLIENT_INDEX_23 = 0x17,
+		CLIENT_INDEX_24 = 0x18,
+		CLIENT_INDEX_25 = 0x19,
+		CLIENT_INDEX_26 = 0x1A,
+		CLIENT_INDEX_27 = 0x1B,
+		CLIENT_INDEX_28 = 0x1C,
+		CLIENT_INDEX_29 = 0x1D,
+		CLIENT_INDEX_30 = 0x1E,
+		CLIENT_INDEX_31 = 0x1F,
+		CLIENT_INDEX_COUNT = 0x12,
+	};
+
+	struct BuiltinFunctionDef
+	{
+		ScrVarCanonicalName_t canonwId;
+		unsigned int min_args;
+		unsigned int max_args;
+		void(*actionFunc)(scriptInstance_t inst);
+		int type;
 	};
 
 	struct AssetLink
@@ -1951,5 +2007,23 @@ namespace game
 		ScrString_t fallimpact_med;
 		ScrString_t fallimpact_fast;
 		ScrString_t fallimpact_rapid;
+	};
+
+	struct __declspec(align(8)) cg_t
+	{
+		ClientNum_t clientNum;
+		LocalClientNum_t localClientNum;
+	};
+
+	struct __declspec(align(8)) cpose_t
+	{
+		BYTE eType;
+		BYTE eTypePrev;
+		BYTE localClientNum;
+	};
+
+	struct centity_t
+	{
+		cpose_t pose;
 	};
 }

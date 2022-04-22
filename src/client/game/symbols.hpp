@@ -10,7 +10,10 @@ namespace game
 	/* BG */
 	WEAK symbol<int(void* ps, void* weapon/*const playerState_t* ps, const Weapon weapon*/)> BG_GetAmmoInClip{ OFFSET(0x1426E7310) };
 	WEAK symbol<int(void* ps, void* weapon/*const playerState_t* ps, const Weapon weapon*/)> BG_GetTotalAmmoReserve{ OFFSET(0x1426E7AB0) };
+	WEAK symbol<int(void* weapon/*const Weapon weapon*/)> BG_GetClipSize{ OFFSET(0x1426E75D0) };
 	WEAK symbol<bool(void* weapon/*const Weapon weapon*/)> BG_IsLeftHandWeapon{ OFFSET(0x1426F4A90) };
+	WEAK symbol<bool(void* weapon/*const Weapon weapon*/)> BG_IsDualWield{ OFFSET(0x1426F4820) };
+	WEAK symbol<void* (void* weapon/*const Weapon weapon*/)> BG_GetDualWieldWeapon{ OFFSET(0x1426EFFD0) };
 
 	/* BUILT-IN */
 	WEAK symbol<const char* (const char* s0, const char* substr)> I_stristr{ OFFSET(0x1422EA2B0) };
@@ -35,6 +38,10 @@ namespace game
 
 	/* CSC/GSC */
 	WEAK symbol<ScrString_t(const char* s)> GScr_AllocString{ OFFSET(0x141A83520) };
+	WEAK symbol<int(scriptInstance_t inst, unsigned int index)> Scr_GetInt{ OFFSET(0x1412EB7F0) };
+	WEAK symbol<const char* (scriptInstance_t inst, unsigned int index)> Scr_GetString{ OFFSET(0x1412EBAA0) };
+	// Variables
+	WEAK symbol<BuiltinFunctionDef> isProfileBuildFunctionDef{ OFFSET(0x1432D9D70) };
 
 	/* DB */
 	WEAK symbol<int(XAssetType type)> DB_GetXAssetTypeSize{ OFFSET(0x1413E9DD0) };
@@ -72,4 +79,5 @@ namespace game
 	/* SYS */
 	WEAK symbol<int()> Sys_IsDatabaseReady2{ OFFSET(0x142184490) };
 	WEAK symbol<void()> Sys_ShowConsole{ OFFSET(0x142333F80) };
+	WEAK symbol<bool()> Sys_IsMainThread{ OFFSET(0x1421844F0) };
 }
