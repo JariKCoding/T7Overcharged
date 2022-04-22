@@ -150,8 +150,8 @@ namespace bullet_depletion
 	public:
 		void start_hooks() override
 		{
-			cg_updateviewmodeldynamicbones_hook.create(0x126EE90, &cg_updateviewmodeldynamicbones_internal);
-			CG_PlayRumbleOnEntity_hook.create(0x9E6C90, &CG_PlayRumbleOnEntity_internal);
+			cg_updateviewmodeldynamicbones_hook.create(REBASE(0x14126EE90), &cg_updateviewmodeldynamicbones_internal);
+			CG_PlayRumbleOnEntity_hook.create(REBASE(0x1409E6C90), &CG_PlayRumbleOnEntity_internal);
 		}
 
 		void destroy_hooks() override
