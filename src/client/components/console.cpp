@@ -216,11 +216,11 @@ namespace console
 			utils::hook::nop(REBASE(0x142152C80), 13);	// Dvar_ListSingle, remove Dvar_GetFlags call
 			utils::hook::nop(REBASE(0x142153233), 9);	// Dvar_ToggleInternal, remove (dvar->flags & 1) == 0
 
-			Com_EventLoop_hook.create(0x20F94B0, Com_EventLoop);
-			Dvar_CanSetConfigDvar_hook.create(0x22B92F0, Dvar_CanSetConfigDvar);
+			Com_EventLoop_hook.create(REBASE(0x1420F94B0), Com_EventLoop);
+			Dvar_CanSetConfigDvar_hook.create(REBASE(0x1422B92F0), Dvar_CanSetConfigDvar);
 			//Dvar_ForEachName_1_hook.create(0x22BD890, Dvar_ForEachName_Complete);
-			Dvar_ForEachName_2_hook.create(0x22BD7E0, Dvar_ForEachName_Match);
-			Dvar_GetDebugName_hook.create(0x22BDCB0, Dvar_GetDebugName);
+			Dvar_ForEachName_2_hook.create(REBASE(0x1422BD7E0), Dvar_ForEachName_Match);
+			Dvar_GetDebugName_hook.create(REBASE(0x1422BDCB0), Dvar_GetDebugName);
 		}
 
 		void destroy_hooks() override
