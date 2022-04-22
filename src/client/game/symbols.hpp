@@ -20,6 +20,9 @@ namespace game
 	WEAK symbol<__int64(int* a1, __int64 a2, __int64 a3)> PLmemset{ OFFSET(0x142C3EA20) };
 	WEAK symbol<int(char* string, unsigned int count, const char* format, char* ap)> vsnprintf{ OFFSET(0x142C3DB30) };
 
+	/* CG */
+	WEAK symbol<void(void* obj, const game::XAnimNotifyInfo* notifyInfo, void* info, const unsigned int notifyFilter, bool shutdown, bool skipNonImportantNotifies)> CG_ProcessClientNote{ OFFSET(0x140255C70) };
+
 	/* CMD */
 	// Variables
 	WEAK symbol<game::cmd_function_t*> cmd_functions{ OFFSET(0x15689FF58) };
@@ -67,7 +70,7 @@ namespace game
 	/* LOBBYSESSION */
 	WEAK symbol<int(INT64 lobbySession, LobbyClientType clientType)> LobbySession_GetClientCount{ OFFSET(0x141ED8B30) };
 
-	/* LUA / UI*/
+	/* LUA / UI */
 	WEAK symbol<const char* (const char* name)> UI_SafeTranslateString{ OFFSET(0x14228F7B0) };
 	WEAK symbol<game::LUIElement* (const char* rootName, lua::lua_State* luaVM)> UI_GetRootElement{ OFFSET(0x1427056C0) };
 	WEAK symbol<void(LUIScopedEvent* event, lua::lua_State* luaVM, const char* rootName, const char* eventName)> GetLUIScopedEvent{ OFFSET(0x1426FF350) };

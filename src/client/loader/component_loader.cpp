@@ -30,7 +30,7 @@ int hook_cycle_create(lua::lua_State* s)
 		return 0;
 	}
 	component_loader::start_hooks();
-	com_loadfrontend_hook.create(0x2148E20, &com_loadfrontend_internal);
+	com_loadfrontend_hook.create(REBASE(0x142148E20), &com_loadfrontend_internal);
 	com_loadfrontend_hooked = true;
 	game::minlog.WriteDebug("Hooks started");
 	return 1;

@@ -51,7 +51,7 @@ namespace lua
 
 		void start_hooks() override
 		{
-			Lua_CoD_LuaStateManager_Interface_ErrorPrint_hook.create(0x1F132B0, Lua_CoD_LuaStateManager_Interface_ErrorPrint);
+			Lua_CoD_LuaStateManager_Interface_ErrorPrint_hook.create(REBASE(0x141F132B0), &Lua_CoD_LuaStateManager_Interface_ErrorPrint);
 		}
 
 		void destroy_hooks() override

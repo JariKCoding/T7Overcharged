@@ -175,7 +175,7 @@ namespace scheduler
 
 		void start_hooks() override
 		{
-			r_end_frame_hook.create(0x1CDAE90, scheduler::r_end_frame_stub);
+			r_end_frame_hook.create(REBASE(0x141CDAE90), scheduler::r_end_frame_stub);
 
 			//utils::hook::call(SELECT_VALUE(0x1403BC922, 0x140413142), scheduler::main_frame_stub);
 			//utils::hook::call(SELECT_VALUE(0x1403185FD, 0x1403A0AF9), scheduler::server_frame_stub);
